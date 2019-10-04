@@ -11,6 +11,7 @@ app.config(function ($routeProvider) {
         otherwise({ redirectTo: '/' });
 });
 
+
 app.controller('homeController', function ($scope, $http) {
 
 });

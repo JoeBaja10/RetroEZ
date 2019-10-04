@@ -41,3 +41,7 @@ body {
 #error {
     color: #ff0000;
 }
+
+#accntbtn:hover {
+    background-color: #FFF;
+}
