@@ -1,0 +1,39 @@
+.navbar {
+    overflow: hidden !important;
+    background-color: #7c7c7c !important;
+}
+
+li {
+    list-style-type: none !important;
+}
+
+.navbar a {
+    font-size: 16px;
+    color: #FFF !important;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.navbar a:hover{ 
+    color: #fe0016 !important;
+}
+
+.navbar-center {
+    text-align: center !important;
+}
+
+body {
+    background-color: #b2b4b2;
+    margin: 0px;
+}
+
+.navbar-nav.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+.form-control:focus {
+    border-color: #000 !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(000, 0, 0, 0.6) !important;
+  }
