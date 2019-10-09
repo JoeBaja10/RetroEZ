@@ -18,10 +18,25 @@ const userSchema = mongoose.Schema({
     password: String
 });
 
-const User = mongoose.model('User_Collection', userSchema);
+const User = mongoose.model('UserAcct_Collection', userSchema);
+
+router.get('/', (req, res) => {
+    User.find((err, userGroup) => {
+        let userMap = {};
+
+        userGroup.forEach((group) => {
+            userMap[group._id] = group;
+        });
+        
+        if (err) return console.error(err);
+        res.send(userGroup);
+    });
+});
 
 router.get('/get/:username/', (req, res) => {
     User.find((err, user) => {
+
+        let acct = "";
 
         console.log(user);
         console.log(req.params.password);
@@ -29,17 +44,20 @@ router.get('/get/:username/', (req, res) => {
         user.forEach((u) => {
             console.log(u.password);
             if (u.username == req.params.username) {
-                res.send(true);
+                acct = u;
+                res.send(acct);
             }
         });
 
         if (err) return console.error(err);
-        res.send(false);
+        res.send(acct);
     });
 });
 
 router.get('/:username/:password', (req, res) => {
     User.find((err, user) => {
+
+        let acct = "";
 
         console.log(user);
         console.log(req.params.password);
@@ -48,11 +66,13 @@ router.get('/:username/:password', (req, res) => {
 
             if (u.username == req.params.username) {
 
-                bcrypt.compare(req.params.password, hash, function (err, res) {
+                let hash = u.password;
+
+                bcrypt.compare(req.params.password, hash, function(err, res) {
                     if (res) {
-                        res.send(true);
+                        acct = u;
                     } else {
-                        res.send(false);
+                        res.send(acct);
                     }
                 });
 
@@ -61,25 +81,28 @@ router.get('/:username/:password', (req, res) => {
 
 
         if (err) return console.error(err);
-        res.send(false);
+        res.send(acct);
     });
 });
 
 router.post('/', (req, res) => {
-    const user = new User();
+    let user = new User();
 
-    bcrypt.hash(req.body.password, 10, function(err, hash) {
-        user = new User({
-            username: req.body.username,
-            password: hash,
-        }); 
-    });
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
+            user = new User({
+                username: req.body.username,
+                password: hash,
+            });
 
-    console.log(user);
+            console.log(user);
 
-    user.save((err, user) => {
-        if (err) return console.error(err);
-        console.log(req.body.username + ' stored');
+            user.save((err, user) => {
+                if (err) return console.error(err);
+                console.log(req.body.password + ' stored');
+            });
+
+        });
     });
 
     res.send(user);

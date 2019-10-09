@@ -11,21 +11,44 @@ app.config(function ($routeProvider) {
         otherwise({ redirectTo: '/' });
 });
 
+app.service('setGetAccount', function () {
+    var objectValue = {
+        data: ""
+    };
+
+    return {
+        getAccount: function () {
+            return objectValue;
+        },
+        setAccount: function (value) {
+            objectValue = value;
+        },
+    };
+});
 
 app.controller('homeController', function ($scope, $http) {
 
 });
 
-app.controller('navController', function () {
-
+app.controller('navController', function (setGetAccount) {
+    let account = setGetAccount.getAccount();
+    
+    console.log(account);
+    if (account.data == "") {
+        document.getElementById("lisu").style.display = "block";
+    }
+    else {
+        document.getElementById("lisu").style.display = "none";
+    }
 });
-
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams) {
 
 });
 
-app.controller('loginController', function ($scope, $http, $log, $window, $routeParams) {
+app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams, $rootScope) {
+    $http.get('/');
+    setGetAccount.setAccount("");
     $scope.username = null;
     $scope.password = null;
     $scope.logIn = function () {
@@ -61,14 +84,29 @@ app.controller('loginController', function ($scope, $http, $log, $window, $route
             document.getElementById('passInput').style.border = '2px solid #FF0000';
         }
         else if ((un == null || unTrim == "") && (pw == null || pwTrim == "")) {
-            document.getElementById("error").innerHTML = "Please enter in an username and password.";
+            document.getElementById("error").innerHTML = "Please enter in an username and/or password.";
             document.getElementById('userInput').style.border = '2px solid #FF0000';
             document.getElementById('passInput').style.border = '2px solid #FF0000';
+        }
+        else {
+            $http.get('http://localhost:3000/user/' + $scope.username + '/' + $scope.password)
+                .then(function (response) {
+                    if (response.data == "") {
+                        setGetAccount.setAccount($scope.username);
+                        $window.location.href = "#!/";
+                    }
+                    else {
+                        document.getElementById("error").innerHTML = "Username and/or Password is wrong.";
+                        document.getElementById('userInput').style.border = '2px solid #FF0000';
+                        document.getElementById('passInput').style.border = '2px solid #FF0000';
+                    }
+                });
         }
     }
 });
 
-app.controller('signupController', function ($scope, $http, $log, $window, $routeParams) {
+app.controller('signupController', function ($scope, $http, $log, setGetAccount, $window, $routeParams, $rootScope) {
+    setGetAccount.setAccount("");
     $scope.username = null;
     $scope.password = null;
     $scope.signUp = function () {
@@ -76,6 +114,7 @@ app.controller('signupController', function ($scope, $http, $log, $window, $rout
         $log.info($scope.password);
         document.getElementById('userInput').style.border = '2px solid #000';
         document.getElementById('passInput').style.border = '2px solid #000';
+        document.getElementById('req').style.color = 'rgb(0,0,0)';
         document.getElementById('error').innerHTML = "";
         let un = $scope.username;
         let pw = $scope.password;
@@ -97,16 +136,33 @@ app.controller('signupController', function ($scope, $http, $log, $window, $rout
 
         if ((un == null && pw != null) || (unTrim == "" && pwTrim != "")) {
             document.getElementById("error").innerHTML = "Please enter in an username.";
+            document.getElementById('req').style.color = "rgb(255,0,0)";
             document.getElementById('userInput').style.border = '2px solid #FF0000';
         }
         else if ((pw == null && un != null) || (pwTrim == "" && unTrim != "")) {
             document.getElementById("error").innerHTML = "Please enter in a password.";
+            document.getElementById('req').style.color = "rgb(255,0,0)";
             document.getElementById('passInput').style.border = '2px solid #FF0000';
         }
         else if ((un == null || unTrim == "") && (pw == null || pwTrim == "")) {
-            document.getElementById("error").innerHTML = "Please enter in an username and password.";
+            document.getElementById("error").innerHTML = "Please enter in an username and/or password.";
+            document.getElementById('req').style.color = "rgb(255,0,0)";
             document.getElementById('userInput').style.border = '2px solid #FF0000';
             document.getElementById('passInput').style.border = '2px solid #FF0000';
+        }
+        else {
+            $http.get('http://localhost:3000/user/get/' + $scope.username)
+                .then(function (response) {
+                    if (response.data != "") {
+                        document.getElementById("error").innerHTML = "Username is already taken";
+                        document.getElementById('userInput').style.border = '2px solid #FF0000';
+                    }
+                    else {
+                        $http.post('http://localhost:3000/user/', { 'username': $scope.username, 'password': $scope.password });
+                        setGetAccount.setAccount($scope.username);
+                        window.location.href = "#!/";
+                    }
+                });
         }
     }
 });

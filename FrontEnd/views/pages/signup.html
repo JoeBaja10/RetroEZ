@@ -5,12 +5,13 @@
         <div id="error"></div>
         <div class="input-group">
             <form ng-submit='signUp()' autocomplete="off">
+                <div id="req"><strong>* REQUIRED</strong></div>
                 <h2>Create an Account</h2>
-                Username: <input type="text" class="form-control" placeholder="Username" name="username" id="userInput">
+                Username*: <input type="text" class="form-control" ng-model="username" name="username" id="userInput">
                 <br />
                 <br />
                 <br />
-                Password: <input type="text" class="form-control" placeholder="Password" name="password" id="passInput">
+                Password*: <input type="text" class="form-control" ng-model="password" name="password" id="passInput">
                 <br />
                 <br />
                 <br />
