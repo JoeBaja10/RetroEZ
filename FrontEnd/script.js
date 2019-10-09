@@ -26,19 +26,27 @@ app.service('setGetAccount', function () {
     };
 });
 
-app.controller('homeController', function ($scope, $http) {
+app.controller('homeController', function ($scope, $route, $http, setGetAccount) {
+    let acct = setGetAccount.getAccount();
+    let username = acct.data;
+    document.getElementById('navbar').style.display = "block";
+    if(username == "") {
+        document.getElementById('lisu').style.display = "block";
+        document.getElementById('loggedin').style.display = "none";
+    }
+    else{
+        document.getElementById('lisu').style.display = "none";
+        document.getElementById('loggedin').style.display = "block";
+        $scope.username = username;
+    }
 
 });
 
-app.controller('navController', function (setGetAccount) {
-    let account = setGetAccount.getAccount();
-    
-    console.log(account);
-    if (account.data == "") {
-        document.getElementById("lisu").style.display = "block";
-    }
-    else {
-        document.getElementById("lisu").style.display = "none";
+app.controller('navbarController', function ($scope, $window, $http, setGetAccount) {
+    $scope.logOut = () => {
+        setGetAccount.setAccount("");
+        console.log('test');
+        $window.location.href = '/';
     }
 });
 
@@ -46,7 +54,8 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
 
 });
 
-app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams, $rootScope) {
+app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams) {
+    document.getElementById('navbar').style.display = "none";
     $http.get('/');
     setGetAccount.setAccount("");
     $scope.username = null;
@@ -105,7 +114,8 @@ app.controller('loginController', function ($scope, $http, $log, setGetAccount, 
     }
 });
 
-app.controller('signupController', function ($scope, $http, $log, setGetAccount, $window, $routeParams, $rootScope) {
+app.controller('signupController', function ($scope, $http, $log, setGetAccount, $window, $routeParams) {
+    document.getElementById('navbar').style.display = "none";
     setGetAccount.setAccount("");
     $scope.username = null;
     $scope.password = null;
@@ -156,6 +166,10 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
                     if (response.data != "") {
                         document.getElementById("error").innerHTML = "Username is already taken";
                         document.getElementById('userInput').style.border = '2px solid #FF0000';
+                    }
+                    else if (pw.length < 6 && (pw != null && pwTrim != "")) {
+                        document.getElementById("error").innerHTML = "Password must be more than 5 charcters.";
+                        document.getElementById('passInput').style.border = '2px solid #FF0000';
                     }
                     else {
                         $http.post('http://localhost:3000/user/', { 'username': $scope.username, 'password': $scope.password });

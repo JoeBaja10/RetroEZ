@@ -14,8 +14,8 @@
 </head>
 
 <body ng-app="myApp">
-    <header ng-controller="navController">
-        <nav class="navbar navbar-inverse">
+    <header ng-controller="navbarController">
+        <nav class="navbar navbar-inverse" id="navbar">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <li><a class="navbar-brand" href="#">RetroEZ</a></li>
@@ -39,6 +39,12 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#!/signup">Sign Up</a></li>
                         <li><a href="#!/login">Login</a></li>
+                    </ul>
+                </div>
+                <div id="loggedin">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#!/">ACCOUNT</a></li>
+                        <li><a href="#" ng-click="$event.preventDefault();logOut()">Log Out</a></li>
                     </ul>
                 </div>
         </nav>

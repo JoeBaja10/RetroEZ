@@ -1,6 +1,7 @@
 .navbar {
     overflow: hidden !important;
     background-color: #7c7c7c !important;
+    display: none;
 }
 
 li {
@@ -27,6 +28,24 @@ body {
     margin: 0px;
 }
 
+.bodyClass {
+    text-align: center;
+}
+
+.input-group.lisu {
+    display: inline-block !important;
+}
+
+
+.lisua {
+    color: #000;
+}
+
+.lisua:hover{
+    color: #fe0016;
+    text-decoration: none;
+}
+
 .navbar-nav.navbar-center {
     position: absolute;
     left: 50%;
@@ -44,4 +63,8 @@ body {
 
 #accntbtn:hover {
     background-color: #FFF;
+}
+
+#loggedin {
+    display: none;
 }
