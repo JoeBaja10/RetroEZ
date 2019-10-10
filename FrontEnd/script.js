@@ -28,21 +28,28 @@ app.service('setGetAccount', function () {
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount) {
     let acct = setGetAccount.getAccount();
+    console.log(acct);
     let username = acct.data;
+    console.log(username);
     document.getElementById('navbar').style.display = "block";
-    if(username == "") {
+    if((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
         document.getElementById('lisu').style.display = "block";
         document.getElementById('loggedin').style.display = "none";
     }
     else{
+        $scope.$emit('loggedinEvent');
         document.getElementById('lisu').style.display = "none";
         document.getElementById('loggedin').style.display = "block";
-        $scope.username = username;
+        $scope.username = acct;
     }
 
 });
 
-app.controller('navbarController', function ($scope, $window, $http, setGetAccount) {
+app.controller('navbarController', function ($scope, $rootScope, $window, $http, setGetAccount) {
+    $rootScope.$on('loggedinEvent', function(event) {
+        $scope.username = setGetAccount.getAccount();
+    })
+
     $scope.logOut = () => {
         setGetAccount.setAccount("");
         console.log('test');

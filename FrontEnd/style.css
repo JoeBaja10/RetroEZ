@@ -23,6 +23,19 @@ li {
     text-align: center !important;
 }
 
+.homeNav {
+    display: inline-block;
+}
+
+.home {
+    color: #000;
+}
+
+.home:hover {
+    color: #fe0016;
+    text-decoration: none;
+}
+
 body {
     background-color: #b2b4b2;
     margin: 0px;
