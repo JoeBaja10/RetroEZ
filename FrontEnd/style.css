@@ -39,6 +39,7 @@ li {
 body {
     background-color: #b2b4b2;
     margin: 0px;
+    padding: 0px;
 }
 
 .bodyClass {
@@ -80,4 +81,33 @@ body {
 
 #loggedin {
     display: none;
+}
+
+#viewport {
+    padding-left: 250px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+  
+#content {
+    width: 100%;
+    position: relative;
+    margin-right: 0;
+}
+  
+#sidebar {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 250px;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #37474F;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }

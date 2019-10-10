@@ -61,6 +61,14 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
 
 });
 
+app.controller('messagesController', function ($scope, $http, $log, $window, setGetAccount) {
+    let acct = setGetAccount.getAccount();
+    let username = acct.data;
+    if((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
+        $window.location.href = '#!/';
+    }
+});
+
 app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams) {
     document.getElementById('navbar').style.display = "none";
     $http.get('/');
@@ -107,11 +115,13 @@ app.controller('loginController', function ($scope, $http, $log, setGetAccount, 
         else {
             $http.get('http://localhost:3000/user/' + $scope.username + '/' + $scope.password)
                 .then(function (response) {
-                    if (response.data == "") {
+                    if (response.data != "") {
                         setGetAccount.setAccount($scope.username);
                         $window.location.href = "#!/";
+
                     }
                     else {
+                        console.log(response);
                         document.getElementById("error").innerHTML = "Username and/or Password is wrong.";
                         document.getElementById('userInput').style.border = '2px solid #FF0000';
                         document.getElementById('passInput').style.border = '2px solid #FF0000';

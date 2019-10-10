@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
         userGroup.forEach((group) => {
             userMap[group._id] = group;
         });
-        
+
         if (err) return console.error(err);
         res.send(userGroup);
     });
@@ -57,31 +57,36 @@ router.get('/get/:username/', (req, res) => {
 router.get('/:username/:password', (req, res) => {
     User.find((err, user) => {
 
-        let acct = "";
-
-        console.log(user);
-        console.log(req.params.password);
+        let acct;
+        let sendNone = true;
 
         user.forEach((u) => {
 
             if (u.username == req.params.username) {
 
+                sendNone = false;
                 let hash = u.password;
 
-                bcrypt.compare(req.params.password, hash, function(err, res) {
-                    if (res) {
+                bcrypt.compare(req.params.password, hash, function (err, corr) {
+                    if (corr == true) {
                         acct = u;
-                    } else {
+                        if (err) return console.error(err);
+                        res.send(acct);
+                    }
+                    else{
+                        if (err) return console.error(err);
                         res.send(acct);
                     }
                 });
 
             }
+
         });
 
+        if(sendNone == true){
+            res.send(acct);
+        }
 
-        if (err) return console.error(err);
-        res.send(acct);
     });
 });
 
