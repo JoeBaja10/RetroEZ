@@ -43,16 +43,28 @@
                 </div>
                 <div id="loggedin">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#!/messages"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a></li>
+                        <li><a href="#!/messages"><span class="glyphicon glyphicon-envelope"
+                                    aria-hidden="true"></span></a></li>
                         <li><a href="#!/">{{ username }}</a></li>
                         <li><a href="#" ng-click="$event.preventDefault();logOut()">Log Out</a></li>
                     </ul>
                 </div>
         </nav>
     </header>
+    
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li>
+                    <a href="#">Inbox</a>
+                </li>
+                <li>
+                    <a href="#">Send</a>
+                </li>
+            </ul>
+        </div>
 
-    <div ng-view></div>
-    <script src="script.js"></script>
+        <div ng-view></div>
+        <script src="script.js"></script>
 </body>
 
 </html>

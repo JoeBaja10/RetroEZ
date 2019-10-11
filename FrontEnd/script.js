@@ -27,6 +27,8 @@ app.service('setGetAccount', function () {
 });
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount) {
+    document.getElementById('sidebar-wrapper').style.display = "none";
+
     let acct = setGetAccount.getAccount();
     console.log(acct);
     let username = acct.data;
@@ -58,6 +60,7 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $http,
 });
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams) {
+    document.getElementById('sidebar-wrapper').style.display = "none";
 
 });
 
@@ -67,6 +70,8 @@ app.controller('messagesController', function ($scope, $http, $log, $window, set
     if((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
         $window.location.href = '#!/';
     }
+
+    document.getElementById('sidebar-wrapper').style.display = "block";
 });
 
 app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams) {
