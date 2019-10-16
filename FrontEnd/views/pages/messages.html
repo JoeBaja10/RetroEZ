@@ -1,10 +1,50 @@
-          <div id="page-content-wrapper">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-lg-12">
-                  
-                </div>
-              </div>
-            </div>
-          </div>
+<div id="wrapper">
+  <div id="sidebar-wrapper">
+    <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+      <li>
+        <div class="border-bttm">
+          <a href="#!/messages/new" class="smallTxt"><span class="glyphicon glyphicon-plus-sign"
+              aria-hidden="true"></span></a>
         </div>
+      </li>
+      <li>
+        <a href="#!/messages">Inbox</a>
+      </li>
+      <li>
+        <a href="#!/messages/sent">Sent</a>
+      </li>
+      <li>
+        <a href="#!/messages/trash">Trash</a>
+      </li>
+    </ul>
+  </div>
+
+
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="new">
+            <div id="error"></div>
+            <form ng-submit='sendMessage()' autocomplete="off">
+              <div class="topRow">
+                <input type="text" class="form-control" ng-model="username" name="username" id="userInput"
+                  placeholder="Username">
+              </div>
+              <div class="topRow">
+                <button class='btn' id='msgbtn' type="submit">SEND <span class="glyphicon glyphicon-share-alt"
+                    aria-hidden="true"></button>
+              </div>
+              <div class="textwrapper"><textarea id="messageBox" cols="2" rows="10" ng-model="message"
+                  placeholder="Type in Message"></textarea></div>
+            </form>
+          </div>
+          <div id="message" class="center">
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

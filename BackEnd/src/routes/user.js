@@ -37,6 +37,7 @@ router.get('/get/:username/', (req, res) => {
     User.find((err, user) => {
 
         let acct = "";
+        let sendNone = true;
 
         console.log(user);
         console.log(req.params.password);
@@ -44,13 +45,17 @@ router.get('/get/:username/', (req, res) => {
         user.forEach((u) => {
             console.log(u.password);
             if (u.username == req.params.username) {
+                sendNone = false;
+
                 acct = u;
                 res.send(acct);
             }
         });
 
-        if (err) return console.error(err);
-        res.send(acct);
+        if (sendNone == true) {
+            if (err) return console.error(err);
+            res.send(acct);
+        }
     });
 });
 
@@ -73,7 +78,7 @@ router.get('/:username/:password', (req, res) => {
                         if (err) return console.error(err);
                         res.send(acct);
                     }
-                    else{
+                    else {
                         if (err) return console.error(err);
                         res.send(acct);
                     }
@@ -83,7 +88,7 @@ router.get('/:username/:password', (req, res) => {
 
         });
 
-        if(sendNone == true){
+        if (sendNone == true) {
             res.send(acct);
         }
 

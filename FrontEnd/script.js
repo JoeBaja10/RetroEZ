@@ -7,7 +7,9 @@ app.config(function ($routeProvider) {
         when('/search/:id', { templateUrl: 'views/pages/todo.html', controller: 'searchController' }).
         when('/game/:id', { templateUrl: 'views/pages/done.html', controller: 'gameController' }).
         when('/messages', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
-        when('/message', { templateUrl: 'views/pages/message.html', controller: 'messageController' }).
+        when('/messages/new', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
+        when('/messages/sent', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
+        when('/messages/trash', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
         otherwise({ redirectTo: '/' });
 });
 
@@ -27,18 +29,17 @@ app.service('setGetAccount', function () {
 });
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount) {
-    document.getElementById('sidebar-wrapper').style.display = "none";
 
     let acct = setGetAccount.getAccount();
     console.log(acct);
     let username = acct.data;
     console.log(username);
     document.getElementById('navbar').style.display = "block";
-    if((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
+    if ((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
         document.getElementById('lisu').style.display = "block";
         document.getElementById('loggedin').style.display = "none";
     }
-    else{
+    else {
         $scope.$emit('loggedinEvent');
         document.getElementById('lisu').style.display = "none";
         document.getElementById('loggedin').style.display = "block";
@@ -48,7 +49,7 @@ app.controller('homeController', function ($scope, $route, $http, setGetAccount)
 });
 
 app.controller('navbarController', function ($scope, $rootScope, $window, $http, setGetAccount) {
-    $rootScope.$on('loggedinEvent', function(event) {
+    $rootScope.$on('loggedinEvent', function (event) {
         $scope.username = setGetAccount.getAccount();
     })
 
@@ -60,18 +61,126 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $http,
 });
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams) {
-    document.getElementById('sidebar-wrapper').style.display = "none";
 
 });
 
-app.controller('messagesController', function ($scope, $http, $log, $window, setGetAccount) {
+app.controller('messagesController', function ($scope, $http, $log, $location, $window, setGetAccount) {
+    document.getElementById('userInput').style.border = '2px solid #000';
+    document.getElementById('messageBox').style.border = '2px solid #000';
+
     let acct = setGetAccount.getAccount();
     let username = acct.data;
-    if((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
+    if ((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
         $window.location.href = '#!/';
     }
 
     document.getElementById('sidebar-wrapper').style.display = "block";
+
+    let showMessages = false;
+
+    if ($location.path() == '/messages') {
+        document.getElementById('new').style.display = 'none';
+        $http.get('http://localhost:3000/message/')
+            .then(function (response) {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].recievingUser == acct && response.data[0].isTrashed == false) {
+                        showMessages = true;
+                    }
+                }
+                if (showMessages == false) {
+                    document.getElementById('message').style.display = "block";
+                    document.getElementById('message').innerHTML = "YOU HAVE NO MESSAGES!"
+                }
+            });
+    }
+    else if ($location.path() == '/messages/new') {
+        document.getElementById('new').style.display = 'block';
+    }
+    else if ($location.path() == '/messages/sent') {
+        document.getElementById('new').style.display = 'none';
+        $http.get('http://localhost:3000/message/')
+            .then(function (response) {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].sendingUser == acct && response.data[0].isTrashed == false) {
+                        showMessages = true;
+                    }
+                }
+                if (showMessages == false) {
+                    document.getElementById('message').style.display = "block";
+                    document.getElementById('message').innerHTML = "YOU HAVE NO SENT MESSAGES!"
+                }
+            });
+    }
+    else if ($location.path() == '/messages/trash') {
+        document.getElementById('new').style.display = 'none';
+        $http.get('http://localhost:3000/message/')
+            .then(function (response) {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].isTrashed == true) {
+                        showMessages = true;
+                    }
+                }
+                if (showMessages == false) {
+                    document.getElementById('message').style.display = "block";
+                    document.getElementById('message').innerHTML = "YOU HAVE NO DELETED MESSAGES!"
+                }
+            });
+    }
+
+
+    $scope.username = null;
+    $scope.message = null;
+    $scope.sendMessage = () => {
+        $log.info($scope.username);
+        $log.info($scope.message);
+        let un = $scope.username;
+        let msg = $scope.message;
+        let unTrim;
+        let msgTrim;
+
+        if (un != null) {
+            unTrim = un.trim();
+        }
+
+        if (msg != null) {
+            msgTrim = msg.trim();
+        }
+
+        if ((un == null && msg != null) || (unTrim == "" && msgTrim != "")) {
+            document.getElementById("error").innerHTML = "Please enter in an username.";
+            document.getElementById('userInput').style.border = '2px solid #FF0000';
+        }
+        else if ((msg == null && un != null) || (msgTrim == "" && msgTrim != "")) {
+            document.getElementById("error").innerHTML = "Please enter in ypur message to send.";
+            document.getElementById('messageBox').style.border = '2px solid #FF0000';
+        }
+        else if ((un == null || unTrim == "") && (msg == null || msgTrim == "")) {
+            document.getElementById("error").innerHTML = "Please enter in an username and your message to send.";
+            document.getElementById('userInput').style.border = '2px solid #FF0000';
+            document.getElementById('messageBox').style.border = '2px solid #FF0000';
+        }
+        else {
+            $http.get('http://localhost:3000/user/get/' + $scope.username)
+                .then(function (response) {
+                    if (response.data != "" && response.data.username != acct) {
+                        $http.post('http://localhost:3000/message/', { 'message': $scope.message, 'sUser': acct, 'rUser': $scope.username });
+                        document.getElementById('new').style.display = 'none';
+                        $window.location.href = '#!/messages';
+                    }
+                    else if (response.data.username == acct) {
+                        document.getElementById("error").innerHTML = "You can't send messages to yourself.";
+                        document.getElementById('userInput').style.border = '2px solid #FF0000';
+                    }
+                    else {
+                        console.log(response);
+                        document.getElementById("error").innerHTML = "User doesn't exist.";
+                        document.getElementById('userInput').style.border = '2px solid #FF0000';
+                        document.getElementById('messageBox').style.border = '2px solid #FF0000';
+                    }
+                });
+        }
+    }
+
 });
 
 app.controller('loginController', function ($scope, $http, $log, setGetAccount, $window, $routeParams) {
@@ -90,6 +199,7 @@ app.controller('loginController', function ($scope, $http, $log, setGetAccount, 
         let pw = $scope.password;
         let unTrim;
         let pwTrim;
+        let loggedIn;
 
         if (un != null) {
             unTrim = un.trim();
@@ -123,7 +233,6 @@ app.controller('loginController', function ($scope, $http, $log, setGetAccount, 
                     if (response.data != "") {
                         setGetAccount.setAccount($scope.username);
                         $window.location.href = "#!/";
-
                     }
                     else {
                         console.log(response);
