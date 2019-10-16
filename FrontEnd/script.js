@@ -82,14 +82,24 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
         document.getElementById('new').style.display = 'none';
         $http.get('http://localhost:3000/message/')
             .then(function (response) {
+                $scope.messages = new Array;
                 for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].recievingUser == acct && response.data[0].isTrashed == false) {
+                    if (response.data[i].recievingUser == acct && response.data[i].isTrashed == false) {
                         showMessages = true;
+                        $scope.messages.push({
+                            user: response.data[i].sendingUser,
+                            msg: response.data[i].message,
+                            id: response.data[i]._id
+                        });
                     }
                 }
                 if (showMessages == false) {
                     document.getElementById('message').style.display = "block";
                     document.getElementById('message').innerHTML = "YOU HAVE NO MESSAGES!"
+                }
+                else {
+                    document.getElementById('messages').style.display = "block";
+                    // document.getElementById('delTD').style.display = "block";
                 }
             });
     }
@@ -100,14 +110,24 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
         document.getElementById('new').style.display = 'none';
         $http.get('http://localhost:3000/message/')
             .then(function (response) {
+                $scope.messages = new Array;
                 for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].sendingUser == acct && response.data[0].isTrashed == false) {
+                    if (response.data[i].sendingUser == acct && response.data[i].isTrashed == false) {
                         showMessages = true;
+                        $scope.messages.push({
+                            user: response.data[i].recievingUser,
+                            msg: response.data[i].message,
+                            id: response.data[i]._id
+                        });
                     }
                 }
                 if (showMessages == false) {
                     document.getElementById('message').style.display = "block";
                     document.getElementById('message').innerHTML = "YOU HAVE NO SENT MESSAGES!"
+                }
+                else {
+                    document.getElementById('messages').style.display = "block";
+                    // document.getElementById('delTD').style.display = "block";
                 }
             });
     }
@@ -115,18 +135,34 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
         document.getElementById('new').style.display = 'none';
         $http.get('http://localhost:3000/message/')
             .then(function (response) {
+                $scope.messages = new Array;
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].isTrashed == true) {
                         showMessages = true;
+                        $scope.messages.push({
+                            user: response.data[i].recievingUser,
+                            msg: response.data[i].message,
+                            id: response.data[i]._id
+                        });
                     }
                 }
                 if (showMessages == false) {
                     document.getElementById('message').style.display = "block";
                     document.getElementById('message').innerHTML = "YOU HAVE NO DELETED MESSAGES!"
                 }
+                else {
+                    // document.getElementById('delTD').style.display = "none";
+                    document.getElementById('messages').style.display = "block";
+                }
             });
     }
 
+    $scope.deleteMessage = function (messageID) {
+        $http.get('http://localhost:3000/message/' + messageID)
+            .then(function (response) {
+                $http.put('http://localhost:3000/message/', { 'id': response.data._id, 'message': response.data.message, 'sUser': response.data.sendingUser, 'rUser': response.data.recievingUser });
+            });
+    }
 
     $scope.username = null;
     $scope.message = null;

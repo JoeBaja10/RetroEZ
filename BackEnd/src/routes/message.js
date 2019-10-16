@@ -29,8 +29,11 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/message/:id', (req, res) => {
-
+router.get('/:id', (req, res) => {
+    Message.findById(req.params.id, (err, message) => {
+        if (err) return console.error(err);
+        res.send(message);
+    });
 });
 
 router.post('/', (req, res) => {
@@ -49,12 +52,21 @@ router.post('/', (req, res) => {
         console.log(req.body.message + ' stored');
     });
 
-
 res.send(message);
 });
 
-router.put('/:isRead', (req, res) => {
-
+router.put('/', (req, res) => {
+    Message.findById(req.body.id, (err, message) => {
+        if (err) return console.error(err);
+        message.message = req.body.message;
+        message.sendingUser = req.body.sUser;
+        message.recievingUser = req.body.rUser;
+        message.isRead = false;
+        message.isTrashed = true;
+        message.save((err, message) => {
+            res.send(req.body.message + ' trashed');
+        });
+    });
 });
 
 module.exports = router;

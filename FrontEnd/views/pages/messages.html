@@ -24,6 +24,17 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
+          <div id='messages'>
+            <table id='messageTable'>
+              <tr ng-repeat="message in messages">
+                <td id="messageTD">Username: <a class="tableA" href='#!/'>{{ message.user }}</a></td>
+                <td id="messageTD">{{ message.msg }}</td>
+                <div id="delTD">
+                <td><a class="tableA" href="#" ng-click="$event.preventDefault();deleteMessage(message.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                </div>
+              </tr>
+            </table>
+          </div>
           <div id="new">
             <div id="error"></div>
             <form ng-submit='sendMessage()' autocomplete="off">

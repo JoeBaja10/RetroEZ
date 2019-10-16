@@ -264,15 +264,7 @@ textarea:focus {
   display: none;
 }
 
-#sent {
-  display: none;
-}
-
-#inbox {
-  display: none;
-}
-
-#trash {
+#messages {
   display: none;
 }
 
@@ -284,4 +276,27 @@ textarea:focus {
 
 .center {
   text-align: center;
+}
+
+#messageTD {
+  font-size: 30px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-left: 2px solid #000;
+}
+
+#delTD {
+  font-size: 30px;
+  padding-left: 25px;
+  border-left: 2px solid #000;
+  /* display: none; */
+}
+
+a.tableA {
+  color: #000;
+  text-decoration: none;
+}
+
+a.tableA:hover {
+  color: #fe0016;
 }
