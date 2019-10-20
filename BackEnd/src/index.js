@@ -14,5 +14,6 @@ app.use(cors());
 app.use('/user', routes.user);
 app.use('/message', routes.message);
 app.use('/list', routes.list);
+app.use('/gameAPI', routes.game);
 
 app.listen(3000);

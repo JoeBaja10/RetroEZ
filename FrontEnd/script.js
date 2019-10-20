@@ -4,8 +4,8 @@ app.config(function ($routeProvider) {
         when('/', { templateUrl: 'views/pages/home.html', controller: 'homeController' }).
         when('/login', { templateUrl: 'views/pages/login.html', controller: 'loginController' }).
         when('/signup', { templateUrl: 'views/pages/signup.html', controller: 'signupController' }).
-        when('/search/:id', { templateUrl: 'views/pages/todo.html', controller: 'searchController' }).
-        when('/game/:id', { templateUrl: 'views/pages/done.html', controller: 'gameController' }).
+        when('/search/:games', { templateUrl: 'views/pages/search.html', controller: 'searchController' }).
+        when('/game/:id', { templateUrl: 'views/pages/game.html', controller: 'gameController' }).
         when('/messages', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
         when('/messages/new', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
         when('/messages/sent', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
@@ -29,42 +29,55 @@ app.service('setGetAccount', function () {
 });
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount) {
-
-    let acct = setGetAccount.getAccount();
-    console.log(acct);
-    let username = acct.data;
-    console.log(username);
-    document.getElementById('navbar').style.display = "block";
-    if ((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
-        document.getElementById('lisu').style.display = "block";
-        document.getElementById('loggedin').style.display = "none";
-    }
-    else {
-        $scope.$emit('loggedinEvent');
-        document.getElementById('lisu').style.display = "none";
-        document.getElementById('loggedin').style.display = "block";
-        $scope.username = acct;
-    }
-
+    $scope.$emit('lisuEvent');
 });
 
-app.controller('navbarController', function ($scope, $rootScope, $window, $http, setGetAccount) {
+app.controller('navbarController', function ($scope, $rootScope, $window, $http, $route, setGetAccount) {
     $rootScope.$on('loggedinEvent', function (event) {
         $scope.username = setGetAccount.getAccount();
-    })
+    });
+
+    $rootScope.$on('lisuEvent', function (event) {
+        let acct = setGetAccount.getAccount();
+        console.log(acct);
+        let username = acct.data;
+        console.log(username);
+        document.getElementById('navbar').style.display = "block";
+        if ((acct.data == "" || acct == "" || acct == undefined) && (username == "" || username == undefined)) {
+            document.getElementById('lisu').style.display = "block";
+            document.getElementById('loggedin').style.display = "none";
+        }
+        else {
+            $scope.$emit('loggedinEvent');
+            document.getElementById('lisu').style.display = "none";
+            document.getElementById('loggedin').style.display = "block";
+            $scope.username = acct;
+        }
+    });
 
     $scope.logOut = () => {
         setGetAccount.setAccount("");
-        console.log('test');
-        $window.location.href = '/';
+        $route.reload();
+    }
+
+    $scope.searchGames = (games) => {
+        $window.location.href = '#!/search/' + games;
     }
 });
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams) {
+    $scope.$emit('lisuEvent');
 
+    let gamesToSearch = $routeParams.games
+
+    $http.get('http://localhost:3000/gameAPI/' + gamesToSearch)
+        .then(function (response) {
+            console.log(response);
+        })
 });
 
-app.controller('messagesController', function ($scope, $http, $log, $location, $window, setGetAccount) {
+app.controller('messagesController', function ($scope, $http, $log, $location, $window, $route, setGetAccount) {
+    $scope.$emit('lisuEvent');
     document.getElementById('userInput').style.border = '2px solid #000';
     document.getElementById('messageBox').style.border = '2px solid #000';
 
@@ -86,7 +99,7 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].recievingUser == acct && response.data[i].isTrashed == false) {
                         showMessages = true;
-                        $scope.messages.push({
+                        $scope.messages.unshift({
                             user: response.data[i].sendingUser,
                             msg: response.data[i].message,
                             id: response.data[i]._id
@@ -114,7 +127,7 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].sendingUser == acct && response.data[i].isTrashed == false) {
                         showMessages = true;
-                        $scope.messages.push({
+                        $scope.messages.unshift({
                             user: response.data[i].recievingUser,
                             msg: response.data[i].message,
                             id: response.data[i]._id
@@ -131,36 +144,37 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
                 }
             });
     }
-    else if ($location.path() == '/messages/trash') {
-        document.getElementById('new').style.display = 'none';
-        $http.get('http://localhost:3000/message/')
-            .then(function (response) {
-                $scope.messages = new Array;
-                for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].isTrashed == true) {
-                        showMessages = true;
-                        $scope.messages.push({
-                            user: response.data[i].recievingUser,
-                            msg: response.data[i].message,
-                            id: response.data[i]._id
-                        });
-                    }
-                }
-                if (showMessages == false) {
-                    document.getElementById('message').style.display = "block";
-                    document.getElementById('message').innerHTML = "YOU HAVE NO DELETED MESSAGES!"
-                }
-                else {
-                    // document.getElementById('delTD').style.display = "none";
-                    document.getElementById('messages').style.display = "block";
-                }
-            });
-    }
+    // else if ($location.path() == '/messages/trash') {
+    //     document.getElementById('new').style.display = 'none';
+    //     $http.get('http://localhost:3000/message/')
+    //         .then(function (response) {
+    //             $scope.messages = new Array;
+    //             for (let i = 0; i < response.data.length; i++) {
+    //                 if (response.data[i].isTrashed == true) {
+    //                     showMessages = true;
+    //                     $scope.messages.push({
+    //                         user: response.data[i].recievingUser,
+    //                         msg: response.data[i].message,
+    //                         id: response.data[i]._id
+    //                     });
+    //                 }
+    //             }
+    //             if (showMessages == false) {
+    //                 document.getElementById('message').style.display = "block";
+    //                 document.getElementById('message').innerHTML = "YOU HAVE NO DELETED MESSAGES!"
+    //             }
+    //             else {
+    //                 // document.getElementById('delTD').style.display = "none";
+    //                 document.getElementById('messages').style.display = "block";
+    //             }
+    //         });
+    // }
 
     $scope.deleteMessage = function (messageID) {
         $http.get('http://localhost:3000/message/' + messageID)
             .then(function (response) {
                 $http.put('http://localhost:3000/message/', { 'id': response.data._id, 'message': response.data.message, 'sUser': response.data.sendingUser, 'rUser': response.data.recievingUser });
+                $route.reload();
             });
     }
 

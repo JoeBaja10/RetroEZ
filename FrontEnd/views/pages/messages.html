@@ -13,9 +13,9 @@
       <li>
         <a href="#!/messages/sent">Sent</a>
       </li>
-      <li>
+      <!-- <li>
         <a href="#!/messages/trash">Trash</a>
-      </li>
+      </li> -->
     </ul>
   </div>
 
@@ -30,7 +30,8 @@
                 <td id="messageTD">Username: <a class="tableA" href='#!/'>{{ message.user }}</a></td>
                 <td id="messageTD">{{ message.msg }}</td>
                 <div id="delTD">
-                <td><a class="tableA" href="#" ng-click="$event.preventDefault();deleteMessage(message.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                  <td><a class="tableA" href="#" ng-click="$event.preventDefault();deleteMessage(message.id)"><span
+                        class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
                 </div>
               </tr>
             </table>
@@ -53,7 +54,6 @@
           <div id="message" class="center">
 
           </div>
-
         </div>
       </div>
     </div>
