@@ -61,19 +61,44 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $http,
     }
 
     $scope.searchGames = (games) => {
-        $window.location.href = '#!/search/' + games;
+        let gamesTrim;
+
+        if (games != null) {
+            gamesTrim = games.trim();
+        }
+
+        if (games != null || gamesTrim == "") {
+            $window.location.href = '#!/search/' + games;
+        }
     }
 });
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams) {
     $scope.$emit('lisuEvent');
 
-    let gamesToSearch = $routeParams.games
+    let gamesToSearch = $routeParams.games;
 
     $http.get('http://localhost:3000/gameAPI/' + gamesToSearch)
         .then(function (response) {
-            console.log(response);
-        })
+            $scope.games = new Array;
+            for (let i = 0; i < response.data.length; i++) {
+                $http.get('http://localhost:3000/gameAPI/cover/' + response.data[i].cover)
+                    .then(function (res) {
+                        if (response.data[i].category == 0) {
+                            if (typeof response.data[i].platforms != 'undefined') {
+                                if (response.data[i].platforms[0].name != 'Android' && response.data[i].platforms[0].name != 'iOS') {
+                                    console.log(response.data[i].platforms[0].name);
+                                    $scope.games.push({
+                                        gameTitle: response.data[i].name,
+                                        cover: res.data[0].url,
+                                        // platforms: response.data[i].platforms
+                                    });
+                                }
+                            }
+                        }
+                    })
+            }
+        });
 });
 
 app.controller('messagesController', function ($scope, $http, $log, $location, $window, $route, setGetAccount) {

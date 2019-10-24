@@ -300,3 +300,12 @@ a.tableA {
 a.tableA:hover {
   color: #fe0016;
 }
+
+.imgLeft {
+  float: left;
+  padding-right: 10px;
+}
+
+.searchLeft {
+  padding-bottom: 25px;
+}
