@@ -1,0 +1,39 @@
+<div class="bodyClass">
+    <h1><strong>SELL GAME</strong></h1>
+    <div class='box'>
+        <br />
+        <div id="error"></div>
+        <div class="input-group sellGame">
+            <h2>Selling: {{ game.gameTitle }}</h2>
+            <form ng-submit='sellGame()' autocomplete="off">
+                <div class="row">
+                    <input type="text" class="form-control col-lg-1" ng-model="title" name="title" id="titleInput"
+                        placeholder="{{ game.gameTitle }}" value="{{ game.gameTitle }}">
+                    <br />
+                    <br />
+                    <br />
+                    <input type="number" step="0.01" class="form-control col-lg-1" ng-model="price" name="price" id="priceInput"
+                        placeholder="Price in $0.00">
+                    <br />
+                    <br />
+                    <br />
+                    <div class="form-group col-lg-1">
+                        <label for="sel1">Platform(s):</label>
+                        <select class="form-control" id="sel1" ng-model='platform' placeholder='Select Platform'>
+                            <option ng-repeat='platform in game.platforms'>{{ platform.name }}</option>
+                        </select>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div class="textwrapper col-lg-1"><textarea id="messageBox" cols="2" rows="5" ng-model="desc"
+                            placeholder="Description"></textarea></div>
+                    <br />
+                    <br />
+                    <br />
+                    <button class='btn' id='sellbtn' type="submit">SELL GAME</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

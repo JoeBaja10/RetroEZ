@@ -15,5 +15,6 @@ app.use('/user', routes.user);
 app.use('/message', routes.message);
 app.use('/list', routes.list);
 app.use('/gameAPI', routes.game);
+app.use('/sell', routes.sell);
 
 app.listen(3000);

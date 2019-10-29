@@ -11,7 +11,7 @@ router.get('/:game', async (req, res) => {
 
     try {
         const response = await igdb('87a4c2d1073c6862032e2e3eb9dc3b11')
-            .fields('id,name,cover,platforms.name,category')
+            .fields('id,name,cover.url,platforms.name,category')
 
             .limit(50)
 
@@ -23,7 +23,6 @@ router.get('/:game', async (req, res) => {
 
         res.send(response.data);
 
-        // fields age_ratings,dlcs,expansions,first_release_date,franchise,genres.name,platforms.name,screenshots,standalone_expansions,summary,videos,websites
     }
     catch{
         res.send('ERR!');
@@ -31,17 +30,41 @@ router.get('/:game', async (req, res) => {
 
 });
 
-router.get('/cover/:coverID', async (req, res) => {
+router.get('/game/:id', async (req, res) => {
+    console.log(req.params.id);
 
-    let coverID = req.params.coverID;
+    let gameToSearch = req.params.id;
 
     try {
         const response = await igdb('87a4c2d1073c6862032e2e3eb9dc3b11')
-            .fields('url')
+            .fields('id,name,cover.url,age_ratings.rating_cover_url,release_dates.date,franchise.name,genres.name,platforms.name,screenshots.url,summary')
 
-            .where('id = ' + coverID)
+            .limit(50)
 
-            .request('/covers');
+            .where('id = ' + gameToSearch)
+
+            .request('/games');
+
+        res.send(response.data);
+
+    }
+    catch{
+        res.send('ERR!');
+    }
+
+});
+
+router.get('/ageRating/:arID', async (req, res) => {
+
+    let arID = req.params.arID;
+
+    try {
+        const response = await igdb('87a4c2d1073c6862032e2e3eb9dc3b11')
+            .fields('rating_cover_url,rating')
+
+            .where('id = ' + arID)
+
+            .request('/age_ratings');
 
         console.log(response.data);
         res.send(response.data);

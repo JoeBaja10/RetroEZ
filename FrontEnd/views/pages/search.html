@@ -1,8 +1,6 @@
-<div ng-repeat='game in games' class="searchLeft">
-    <a><img data-ng-src="{{ game.cover }}" class="imgLeft"/>
+<div ng-repeat='game in games' class="gameBottom gameLeft">
+    <a class="searchLink" href="#!/game/{{ game.gameID }}"><img data-ng-src="{{ game.cover.url }}" class="imgLeft"/>
         <h1>{{ game.gameTitle }}</h1>
-        <!-- <div ng-repeat='platform in {{ game.platforms }}'>
-            <p>{{ platform.name }}</p>
-        </div> -->
     </a>
+    <p ng-repeat='platform in game.platforms' class="platform">{{ platform.name }}</p>
 </div>

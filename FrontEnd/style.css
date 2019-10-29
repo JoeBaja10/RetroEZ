@@ -55,6 +55,9 @@ body {
     display: inline-block !important;
 }
 
+.input-group.sellGame {
+  display: inline-block !important;
+}
 
 .lisua {
     color: #000;
@@ -81,6 +84,10 @@ body {
 }
 
 #accntbtn:hover {
+    background-color: #FFF;
+}
+
+#sellbtn:hover {
     background-color: #FFF;
 }
 
@@ -306,6 +313,80 @@ a.tableA:hover {
   padding-right: 10px;
 }
 
-.searchLeft {
-  padding-bottom: 25px;
+.gameBottom {
+  padding-bottom: 40px;
+}
+
+.gameBottom2 {
+  padding-bottom: 10px;
+}
+
+.gameLeft {
+  padding-left: 20px;
+}
+
+.gameRight {
+  padding-right: 20px;
+}
+
+.gameRight2 {
+  padding-right: 5px;
+}
+
+.titleGradient {
+  background-image: linear-gradient(to right, #FFF , #b2b4b2);
+}
+
+.platform {
+  float: left;
+  padding-right: 10px;
+}
+
+a.searchLink {
+  color: #000;
+  text-decoration: none;
+}
+
+a.searchLink:hover {
+  color: #FFF;
+}
+
+.screenshots {
+  float: left;
+}
+
+.screenshots img {
+  height: 200px;
+  width: 200px;
+  padding-right: 10px;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.sell {
+  float: right;
+  font-size: 27px;
+}
+
+p.gameRight.sell {
+  color: #000;
+  text-decoration: none;
+}
+
+p.gameRight.sell:hover {
+  color: #FFF;
+}
+
+#screenshots {
+  display: none;
+}
+
+#summary {
+  display: none;
+}
+
+#storefront {
+  display:  none;
 }
