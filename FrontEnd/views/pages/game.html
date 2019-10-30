@@ -34,11 +34,14 @@
         <h3>N/A</h3>
     </div>
 </div>
-
+<br />
+<br />
 <div class="gameLeft floatLeft">
     <h3><strong>STOREFRONT:</strong></h3>
-    <div class="storefront">
-        
+    <div class="storefront floatLeft gameRight" ng-repeat='beingSold in selling'>
+            <img data-ng-src="{{ beingSold.coverURL }}" />
+            <p>{{ beingSold.title }}</p>
+            <p>Seller: {{ beingSold.sUser }}</p>
     </div>
     <div id="storefront">
         <h3>No one is selling this game. Do you want to sell this game?</h3>

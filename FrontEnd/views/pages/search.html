@@ -1,3 +1,5 @@
+<h1 class="gameLeft"><strong>Searching: {{ searchParam }}</strong></h1>
+<br />
 <div ng-repeat='game in games' class="gameBottom gameLeft">
     <a class="searchLink" href="#!/game/{{ game.gameID }}"><img data-ng-src="{{ game.cover.url }}" class="imgLeft"/>
         <h1>{{ game.gameTitle }}</h1>

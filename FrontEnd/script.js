@@ -142,6 +142,8 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
 
     let gamesToSearch = $routeParams.games;
 
+    $scope.searchParam = $routeParams.games;
+
     setGetPage.setPage('#!/search/' + gamesToSearch);
 
     $http.get('http://localhost:3000/gameAPI/' + gamesToSearch)
@@ -166,6 +168,13 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
 });
 
 app.controller('gameController', function ($scope, $http, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
+    let rPage = setGetPage.getPage();
+
+    if(rPage == '#!/game/' + $routeParams.id) {
+        setGetPage.setPage('');
+        $window.location.reload();
+    }
+
     $scope.$emit('lisuEvent');
 
     setGetPage.setPage('game')
@@ -210,13 +219,25 @@ app.controller('gameController', function ($scope, $http, $window, $routeParams,
                 // document.getElementsByClassName('summary')[0].style.display = 'none';
             }
 
-            let beingSold = false;
-
-            if (beingSold == false) {
-                document.getElementById('storefront').style.display = 'inline-block';
-                // document.getElekmentsByClassName('storefront')[0].style.display = 'none';
-            }
         });
+
+    $http.get('http://localhost:3000/sell/' + gameID)
+        .then(function (response) {
+            $scope.selling = new Array;
+            if (typeof response.data[0] == 'undefined') {
+                    document.getElementById('storefront').style.display = 'inline-block';
+                    // document.getElekmentsByClassName('storefront')[0].style.display = 'none';
+            }
+            else {
+                for (let i = 0; i < response.data.length; i++) {
+                    $scope.selling.push({
+                        coverURL: response.data[i].coverURL,
+                        title: response.data[i].title,
+                        sUser: response.data[i].sellingUser
+                    });
+                }
+            }
+        })
 
     $scope.sellGame = function (gameID, gameTitle, platforms, coverURL) {
         let game = {
@@ -232,7 +253,7 @@ app.controller('gameController', function ($scope, $http, $window, $routeParams,
     }
 });
 
-app.controller('sellController', function ($scope, $http, $log, $window, $routeParams, setGetGame) {
+app.controller('sellController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     let game = setGetGame.getGame();
     let gameData = game.data;
     if ((game.data == "" || game == undefined) && (gameData == "" || gameData == undefined)) {
@@ -246,15 +267,62 @@ app.controller('sellController', function ($scope, $http, $log, $window, $routeP
             coverURL: game.coverURL
         };
 
+        $scope.deliveryOptions = ['Shipping', 'Pick-Up']
+
         $scope.title = null;
         $scope.price = null;
         $scope.platform = null;
         $scope.desc = null;
+        $scope.delivery = null;
         $scope.sellGame = function () {
             $log.info($scope.title);
             $log.info($scope.price);
             $log.info($scope.platform);
             $log.info($scope.desc);
+            $log.info($scope.delivery)
+
+            document.getElementById('priceInput').style.border = 'none';
+            document.getElementById('sel1').style.border = 'none';
+            document.getElementById('sel2').style.border = 'none';
+            document.getElementById('req').style.color = '#000000';
+            document.getElementById('error').innerHTML = '';
+
+            let sellGame = true;
+
+            if ($scope.price == null) {
+                document.getElementById('priceInput').style.border = '2px solid #FF0000';
+                document.getElementById('req').style.color = '#FF0000';
+                sellGame = false;
+            }
+            if ($scope.platform == null) {
+                document.getElementById('sel1').style.border = '2px solid #FF0000';
+                document.getElementById('req').style.color = '#FF0000';
+                sellGame = false;
+            }
+            if ($scope.delivery == null) {
+                document.getElementById('sel2').style.border = '2px solid #FF0000';
+                document.getElementById('req').style.color = '#FF0000';
+                sellGame = false;
+            }
+
+            if ($scope.price < 0.99 && $scope.price != null) {
+                document.getElementById("error").innerHTML = "You can't have the price of the item be $0.98 or less";
+                document.getElementById('priceInput').style.border = '2px solid #FF0000';
+                sellGame = false;
+            }
+
+            if ($scope.title == null) {
+                $scope.title = game.gameTitle;
+            }
+
+            let user = setGetAccount.getAccount();
+            let page = setGetPage.getPage();
+
+            if (sellGame == true) {
+                $http.post('http://localhost:3000/sell/', { 'cURL': game.coverURL, 'gameID': game.gameID, 'title': $scope.title, 'desc': $scope.desc, 'price': $scope.price, 'sUser': user, 'dOption': $scope.delivery });
+
+                $window.location.href = page;
+            };
         };
     }
 });
