@@ -26,6 +26,13 @@ const sellSchema = mongoose.Schema({
 
 const Sell = mongoose.model('Sell_Collection', sellSchema);
 
+router.get('/', (req, res) => {
+    Sell.find((err, items) => {
+        if (err) return console.error(err);
+        res.send(items);
+    });
+});
+
 router.get('/:gameID', (req, res) => {
     Sell.find((err, items) => {
         let itemsForSale = new Array;
@@ -65,8 +72,12 @@ router.put('/', (req, res) => {
 
 });
 
-router.delete('/', (req, res) => {
+router.delete('/:id', (req, res) => {
+    Sell.findByIdAndRemove(req.params.id, (err, sell) => {
+        if (err) return console.error(err);
+    });
 
+    res.send('Deleted!')
 });
 
 module.exports = router;

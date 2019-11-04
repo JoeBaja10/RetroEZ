@@ -1,0 +1,11 @@
+<h1><strong>STOREFRONT:</strong></h1>
+<div class="gameLeft floatLeft">
+    <div class="storefront floatLeft gameRight" ng-repeat='beingSold in selling'>
+            <img data-ng-src="{{ beingSold.coverURL }}" />
+            <p class="sf">{{ beingSold.title }}</p>
+            <p>Seller: {{ beingSold.sUser }}</p>
+    </div>
+    <div id="storefront">
+        <h3>No one is games. Do you want to be the first person to sell a game?</h3>
+    </div>
+</div>

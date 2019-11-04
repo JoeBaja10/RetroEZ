@@ -400,3 +400,10 @@ p.gameRight.sell:hover {
 #storefront {
   display:  none;
 }
+
+.sf {
+  width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
