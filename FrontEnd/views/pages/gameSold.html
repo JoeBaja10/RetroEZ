@@ -1,0 +1,21 @@
+<div class="gs">
+    <h1 class="gameLeft center"><strong>{{ selling.title }}</strong></h1>
+    <div class="gameLeft" id="gs2">
+        <div class="gameBottom gs4">
+            <img data-ng-src="{{ selling.coverURL }}" class="gameRight sellingIMG floatLeft center" />
+            <div class="floatLeft gs3">
+                <p>Platform: <strong>{{ selling.platform }}</strong></p>
+                <p>Price: <strong>${{ selling.price }}</strong></p>
+                <p>Seller: <strong>{{ selling.sUser }}</strong></p>
+                <p>Delivery By: <strong>{{ selling.dOption }}</strong></p>
+                <br />
+                <button class='btn' id='buybtn' ng-click="buyGame(selling.id)">BUY GAME</button>
+            </div>
+        </div>
+        <div class="floatLeft">
+            <p class="gs5"><strong>Description:</strong></p>
+            <p>{{ selling.desc }}</p>
+            <p id="desc">N/A</p>
+        </div>
+    </div>
+</div>

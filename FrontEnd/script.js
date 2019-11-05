@@ -11,6 +11,7 @@ app.config(function ($routeProvider) {
         when('/messages/sent', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
         when('/messages/trash', { templateUrl: 'views/pages/messages.html', controller: 'messagesController' }).
         when('/storefront', { templateUrl: 'views/pages/storefront.html', controller: 'storefrontController' }).
+        when('/gameSold/:id', { templateUrl: 'views/pages/gameSold.html', controller: 'soldController' }).
         when('/sellGame', { templateUrl: 'views/pages/sell.html', controller: 'sellController' }).
         otherwise({ redirectTo: '/' });
 });
@@ -87,7 +88,7 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $route
             if (storageUser) {
                 try {
                     $scope.username = JSON.parse(storageUser);
-                    setGetAccount.setAccount($scope.username)
+                    setGetAccount.setAccount($scope.username);
                     document.getElementById('lisu').style.display = "none";
                     document.getElementById('loggedin').style.display = "block";
                 } catch (e) {
@@ -171,7 +172,7 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
 app.controller('gameController', function ($scope, $http, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     let rPage = setGetPage.getPage();
 
-    if(rPage == '#!/game/' + $routeParams.id) {
+    if (rPage == '#!/game/' + $routeParams.id) {
         setGetPage.setPage('');
         $window.location.reload();
     }
@@ -226,25 +227,27 @@ app.controller('gameController', function ($scope, $http, $window, $routeParams,
         .then(function (response) {
             $scope.selling = new Array;
             if (typeof response.data[0] == 'undefined') {
-                    document.getElementById('storefront').style.display = 'inline-block';
-                    // document.getElekmentsByClassName('storefront')[0].style.display = 'none';
+                document.getElementById('storefront').style.display = 'inline-block';
+                // document.getElekmentsByClassName('storefront')[0].style.display = 'none';
             }
             else {
                 for (let i = 0; i < response.data.length; i++) {
-                    if(typeof response.data[i].coverURL != 'undefined') {
-                    $scope.selling.push({
-                        id: response.data[i]._id,
-                        coverURL: response.data[i].coverURL,
-                        title: response.data[i].title,
-                        sUser: response.data[i].sellingUser
-                    });
-                }
-                else {
-                    $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
-                    if (typeof response.data[0] == 'undefined') {
-                        document.getElementById('storefront').style.display = 'inline-block';
+                    if (typeof response.data[i].coverURL != 'undefined' || typeof response.data[i].platform != 'undefined' && response.data[i].isBought == false) {
+                        $scope.selling.push({
+                            id: response.data[i]._id,
+                            coverURL: response.data[i].coverURL,
+                            title: response.data[i].title,
+                            sUser: response.data[i].sellingUser,
+                            price: response.data[i].price,
+                            platform: response.data[i].platform
+                        });
                     }
-                }
+                    else {
+                        $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
+                        if (typeof response.data[0] == 'undefined') {
+                            document.getElementById('storefront').style.display = 'inline-block';
+                        }
+                    }
                 }
             }
         })
@@ -264,32 +267,65 @@ app.controller('gameController', function ($scope, $http, $window, $routeParams,
 });
 
 app.controller('storefrontController', function ($scope, $route, $http, setGetAccount, setGetPage) {
+    $scope.$emit('lisuEvent');
+
     $http.get('http://localhost:3000/sell/')
         .then(function (response) {
             $scope.selling = new Array;
             if (typeof response.data[0] == 'undefined') {
-                    document.getElementById('storefront').style.display = 'inline-block';
-                    // document.getElementsByClassName('storefront')[0].style.display = 'none';
+                document.getElementById('storefront').style.display = 'inline-block';
+                // document.getElementsByClassName('storefront')[0].style.display = 'none';
             }
             else {
                 for (let i = 0; i < response.data.length; i++) {
-                    if(typeof response.data[i].coverURL != 'undefined') {
-                    $scope.selling.push({
-                        id: response.data[i]._id,
-                        coverURL: response.data[i].coverURL,
-                        title: response.data[i].title,
-                        sUser: response.data[i].sellingUser
-                    });
-                }
-                else {
-                    $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
-                    if (typeof response.data[0] == 'undefined') {
-                        document.getElementById('storefront').style.display = 'inline-block';
+                    if (typeof response.data[i].coverURL != 'undefined' || typeof response.data[i].platform != 'undefined' && response.data[i].isBought == false) {
+                        $scope.selling.push({
+                            id: response.data[i]._id,
+                            coverURL: response.data[i].coverURL,
+                            title: response.data[i].title,
+                            sUser: response.data[i].sellingUser,
+                            price: response.data[i].price,
+                            platform: response.data[i].platform
+                        });
                     }
-                }
+                    else {
+                        $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
+                        if (typeof response.data[0] == 'undefined') {
+                            document.getElementById('storefront').style.display = 'inline-block';
+                        }
+                    }
                 }
             }
         })
+});
+
+app.controller('soldController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
+    $scope.$emit('lisuEvent');
+
+    let id = $routeParams.id
+
+    $http.get('http://localhost:3000/sell/get/' + id)
+        .then(function (response) {
+            console.log(response.data);
+            $scope.selling = {
+                id: response.data._id,
+                coverURL: response.data.coverURL,
+                title: response.data.title,
+                sUser: response.data.sellingUser,
+                price: response.data.price,
+                platform: response.data.platform,
+                dOption: response.data.deliveryOption,
+                desc: response.data.desc
+            };
+
+            if(response.data.desc == null || response.data.desc == "") {
+                document.getElementById('desc').style.display = 'inline-block';
+            }
+        })
+
+        $scope.buyGame = (id) => {
+            console.log(id);
+        }
 });
 
 app.controller('sellController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
@@ -306,7 +342,7 @@ app.controller('sellController', function ($scope, $http, $log, $window, $routeP
             coverURL: game.coverURL
         };
 
-        $scope.deliveryOptions = ['Shipping', 'Pick-Up']
+        $scope.deliveryOptions = ['Shipping', 'Pick-Up', 'Code']
 
         $scope.title = null;
         $scope.price = null;
@@ -358,7 +394,7 @@ app.controller('sellController', function ($scope, $http, $log, $window, $routeP
             let page = setGetPage.getPage();
 
             if (sellGame == true) {
-                $http.post('http://localhost:3000/sell/', { 'cURL': game.coverURL, 'gameID': game.gameID, 'title': $scope.title, 'desc': $scope.desc, 'price': $scope.price, 'sUser': user, 'dOption': $scope.delivery });
+                $http.post('http://localhost:3000/sell/', { 'cURL': game.coverURL, 'gameID': game.gameID, 'title': $scope.title, 'desc': $scope.desc, 'price': $scope.price, 'platform': $scope.platform, 'sUser': user, 'dOption': $scope.delivery });
 
                 $window.location.href = page;
             };
@@ -434,31 +470,6 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
                 }
             });
     }
-    // else if ($location.path() == '/messages/trash') {
-    //     document.getElementById('new').style.display = 'none';
-    //     $http.get('http://localhost:3000/message/')
-    //         .then(function (response) {
-    //             $scope.messages = new Array;
-    //             for (let i = 0; i < response.data.length; i++) {
-    //                 if (response.data[i].isTrashed == true) {
-    //                     showMessages = true;
-    //                     $scope.messages.push({
-    //                         user: response.data[i].recievingUser,
-    //                         msg: response.data[i].message,
-    //                         id: response.data[i]._id
-    //                     });
-    //                 }
-    //             }
-    //             if (showMessages == false) {
-    //                 document.getElementById('message').style.display = "block";
-    //                 document.getElementById('message').innerHTML = "YOU HAVE NO DELETED MESSAGES!"
-    //             }
-    //             else {
-    //                 // document.getElementById('delTD').style.display = "none";
-    //                 document.getElementById('messages').style.display = "block";
-    //             }
-    //         });
-    // }
 
     $scope.deleteMessage = function (messageID) {
         $http.get('http://localhost:3000/message/' + messageID)
@@ -655,6 +666,7 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
                     }
                     else {
                         $http.post('http://localhost:3000/user/', { 'username': $scope.username, 'password': $scope.password });
+                        $http.post('http://localhost:3000/message/', { 'message': 'Welcome ' + $scope.username + '!\n Thanks for using RetroEZ. We hope that you will find the game that you are looking for.', 'sUser': 'RetroEZ', 'rUser': $scope.username });
                         $window.localStorage.setItem('user', JSON.stringify($scope.username));
                         setGetAccount.setAccount($scope.username);
                         let page = setGetPage.getPage();

@@ -17,6 +17,7 @@ const sellSchema = mongoose.Schema({
     gameID: String,
     title: String,
     price: String,
+    platform: String,
     desc: String,
     sellingUser: String,
     buyingUser: String,
@@ -31,6 +32,12 @@ router.get('/', (req, res) => {
         if (err) return console.error(err);
         res.send(items);
     });
+});
+
+router.get('/get/:id', (req, res) => {
+    Sell.findById(req.params.id, (err, item) => {
+        res.send(item);
+    })
 });
 
 router.get('/:gameID', (req, res) => {
@@ -53,6 +60,7 @@ router.post('/', (req, res) => {
         gameID: req.body.gameID,
         title: req.body.title,
         price: req.body.price,
+        platform: req.body.platform,
         desc: req.body.desc,
         sellingUser: req.body.sUser,
         buyingUser: null,
