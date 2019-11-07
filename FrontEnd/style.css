@@ -430,6 +430,13 @@ p.gameRight.sell:hover {
   margin: 0px;
 }
 
+.gselipsis {
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 a.sold {
   color: #000;
   text-decoration: none;
@@ -437,6 +444,15 @@ a.sold {
 
 a.sold:hover {
   color: #7c7c7c;
+}
+
+a.user {
+  color: #7c7c7c;
+  text-decoration: none;
+}
+
+a.user:hover {
+  color: #000;
 }
 
 .sellingIMG {
@@ -496,4 +512,21 @@ a.sold:hover {
 
 #desc {
   display: none;
+}
+
+.sshots {
+  height: 100px;
+}
+
+.sum {
+  width: 1520px;
+}
+
+#removebtn {
+  display: none;
+}
+
+#removebtn:hover {
+  background-color: #000;
+  color: #fff;
 }

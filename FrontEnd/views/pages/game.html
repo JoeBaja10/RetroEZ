@@ -14,7 +14,7 @@
 </div>
 <br />
 <br />
-<div class="gameLeft">
+<div class="gameLeft sshots">
     <h3><strong>SCREENSHOTS:</strong></h3>
     <div class="screenshots gameBottom2" ng-repeat='screenshot in game.screenshots'>
         <img data-ng-src="{{ screenshot.url }}" />
@@ -25,7 +25,7 @@
 </div>
 <br />
 <br />
-<div class="gameLeft floatLeft">
+<div class="gameLeft floatLeft sum">
     <h3><strong>SUMMARY:</strong></h3>
     <div class="summary">
         <p>{{ game.summary }}</p>
@@ -36,7 +36,7 @@
 </div>
 <br />
 <br />
-<div class="gameLeft floatLeft">
+<div class="gameLeft floatLeft sfront">
     <h3><strong>STOREFRONT:</strong></h3>
     <div class="storefront floatLeft gameRight3 sfBorder center" ng-repeat='beingSold in selling'>
         <a class="sold" href="#!/gameSold/{{ beingSold.id }}"><img data-ng-src="{{ beingSold.coverURL }}" />
@@ -44,7 +44,7 @@
         </a>
         <p class="sf">{{ beingSold.platform }}</p>
         <p class="sf">${{ beingSold.price }}</p>
-        <p class="sf">Seller: {{ beingSold.sUser }}</p>
+        <p class="sf">Seller: <a class="user" href="#!/">{{ beingSold.sUser }}</a></p>
     </div>
     <div id="storefront">
         <h3>No one is selling this game. Do you want to sell this game?</h3>

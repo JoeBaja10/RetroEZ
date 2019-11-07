@@ -67,7 +67,7 @@ app.controller('homeController', function ($scope, $route, $http, setGetAccount,
     setGetPage.setPage('#!/');
 });
 
-app.controller('navbarController', function ($scope, $rootScope, $window, $route, setGetAccount) {
+app.controller('navbarController', function ($scope, $rootScope, $window, $route, setGetAccount, setGetPage) {
     $rootScope.$on('loggedinEvent', function (event) {
         $scope.username = setGetAccount.getAccount();
     });
@@ -102,22 +102,15 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $route
             document.getElementById('loggedin').style.display = "block";
         }
 
-        // let acct = setGetAccount.getAccount();
-        // console.log(acct);
-        // let username = acct.data;
-        // console.log(username);
+        let page = setGetPage.getPage();
+        console.log(page);
 
-        // document.getElementById('navbar').style.display = "block";
-        // if ((acct.data == "" || acct == "" || acct == undefined) && (username == "" || username == undefined)) {
-        //     document.getElementById('lisu').style.display = "block";
-        //     document.getElementById('loggedin').style.display = "none";
-        // }
-        // else {
-        //     $scope.$emit('loggedinEvent');
-        //     document.getElementById('lisu').style.display = "none";
-        //     document.getElementById('loggedin').style.display = "block";
-        //     $scope.username = acct;
-        // }
+        if(page == '#!/storefront') {
+            document.getElementById('searchbar').style.display = 'none';
+        }
+        else{
+            document.getElementById('searchbar').style.display = 'inline-block';   
+        }
     });
 
     $scope.logOut = () => {
@@ -267,6 +260,8 @@ app.controller('gameController', function ($scope, $http, $window, $routeParams,
 });
 
 app.controller('storefrontController', function ($scope, $route, $http, setGetAccount, setGetPage) {
+    setGetPage.setPage('#!/storefront');
+
     $scope.$emit('lisuEvent');
 
     $http.get('http://localhost:3000/sell/')
@@ -302,6 +297,12 @@ app.controller('storefrontController', function ($scope, $route, $http, setGetAc
 app.controller('soldController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     $scope.$emit('lisuEvent');
 
+    let getPage = setGetPage.getPage();
+    // console.log(getPage);
+    if (getPage.data == "" || getPage == undefined) {
+        setGetPage.setPage('#!/');
+    }
+
     let id = $routeParams.id
 
     $http.get('http://localhost:3000/sell/get/' + id)
@@ -309,6 +310,7 @@ app.controller('soldController', function ($scope, $http, $log, $window, $routeP
             console.log(response.data);
             $scope.selling = {
                 id: response.data._id,
+                gameID: response.data.gameID,
                 coverURL: response.data.coverURL,
                 title: response.data.title,
                 sUser: response.data.sellingUser,
@@ -321,10 +323,26 @@ app.controller('soldController', function ($scope, $http, $log, $window, $routeP
             if(response.data.desc == null || response.data.desc == "") {
                 document.getElementById('desc').style.display = 'inline-block';
             }
+
+            let acct = setGetAccount.getAccount();
+
+            if(response.data.sellingUser == acct) {
+                document.getElementById('buybtn').style.display = 'none';
+                document.getElementById('removebtn').style.display = 'inline-block';
+            }
         })
+
+        $scope.filterQuery = { fil: 'title' };
 
         $scope.buyGame = (id) => {
             console.log(id);
+        }
+
+        $scope.removeItem = () => {
+            let page = setGetPage.getPage();
+
+            $http.delete('http://localhost:3000/sell/' + id);
+            $window.location.href = page;
         }
 });
 
@@ -386,7 +404,7 @@ app.controller('sellController', function ($scope, $http, $log, $window, $routeP
                 sellGame = false;
             }
 
-            if ($scope.title == null) {
+            if ($scope.title == null || $scope.title.trim() == "") {
                 $scope.title = game.gameTitle;
             }
 
@@ -666,7 +684,7 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
                     }
                     else {
                         $http.post('http://localhost:3000/user/', { 'username': $scope.username, 'password': $scope.password });
-                        $http.post('http://localhost:3000/message/', { 'message': 'Welcome ' + $scope.username + '!\n Thanks for using RetroEZ. We hope that you will find the game that you are looking for.', 'sUser': 'RetroEZ', 'rUser': $scope.username });
+                        $http.post('http://localhost:3000/message/', { 'message': 'Welcome ' + $scope.username + '!\n Thanks for using RetroEZ. We hope that you will like you experience here on this site. You can search, buy, and sell games. Thanks, RetroEZ Staff', 'sUser': 'RetroEZ', 'rUser': $scope.username });
                         $window.localStorage.setItem('user', JSON.stringify($scope.username));
                         setGetAccount.setAccount($scope.username);
                         let page = setGetPage.getPage();

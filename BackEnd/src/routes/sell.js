@@ -64,6 +64,7 @@ router.post('/', (req, res) => {
         desc: req.body.desc,
         sellingUser: req.body.sUser,
         buyingUser: null,
+        dateSold: null,
         deliveryOption: req.body.dOption,
         isBought: false
     });
