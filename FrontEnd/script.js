@@ -13,6 +13,7 @@ app.config(function ($routeProvider) {
         when('/storefront', { templateUrl: 'views/pages/storefront.html', controller: 'storefrontController' }).
         when('/gameSold/:id', { templateUrl: 'views/pages/gameSold.html', controller: 'soldController' }).
         when('/sellGame', { templateUrl: 'views/pages/sell.html', controller: 'sellController' }).
+        when('/buy/:id', { templateUrl: 'views/pages/purchase.html', controller: 'buyController' }).
         otherwise({ redirectTo: '/' });
 });
 
@@ -105,11 +106,11 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $route
         let page = setGetPage.getPage();
         console.log(page);
 
-        if(page == '#!/storefront') {
+        if (page == '#!/storefront') {
             document.getElementById('searchbar').style.display = 'none';
         }
-        else{
-            document.getElementById('searchbar').style.display = 'inline-block';   
+        else {
+            document.getElementById('searchbar').style.display = 'inline-block';
         }
     });
 
@@ -320,31 +321,80 @@ app.controller('soldController', function ($scope, $http, $log, $window, $routeP
                 desc: response.data.desc
             };
 
-            if(response.data.desc == null || response.data.desc == "") {
+            if (response.data.desc == null || response.data.desc == "") {
                 document.getElementById('desc').style.display = 'inline-block';
             }
 
             let acct = setGetAccount.getAccount();
 
-            if(response.data.sellingUser == acct) {
+            if (response.data.sellingUser == acct) {
                 document.getElementById('buybtn').style.display = 'none';
                 document.getElementById('removebtn').style.display = 'inline-block';
             }
         })
 
-        $scope.filterQuery = { fil: 'title' };
+    $scope.filterQuery = { fil: 'title' };
 
-        $scope.buyGame = (id) => {
-            console.log(id);
-        }
+    $scope.buyGame = (id) => {
+        console.log(id);
+        $window.location.href = '#!/buy/' + id;
+    }
 
-        $scope.removeItem = () => {
-            let page = setGetPage.getPage();
+    $scope.removeItem = () => {
+        let page = setGetPage.getPage();
 
-            $http.delete('http://localhost:3000/sell/' + id);
-            $window.location.href = page;
-        }
+        $http.delete('http://localhost:3000/sell/' + id);
+        $window.location.href = page;
+    }
 });
+
+app.controller('buyController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
+    $scope.$emit('lisuEvent');
+
+    let getPage = setGetPage.getPage();
+    // console.log(getPage);
+    if (getPage.data == "" || getPage == undefined) {
+        setGetPage.setPage('#!/');
+    }
+
+    paypal.Buttons({
+
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '0.01'
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+
+    //   let cardjs = document.getElementById('cardjsScript');
+    //   let script= document.createElement('script');
+    //   script.src= '../../bower_components/card-js/card-js.min.js';
+    //   let div = document.createElement('div');
+    //   div.className = 'card-js';
+    //   div.
+    //   cardjs.appendChild(div);
+    //   cardjs.appendChild(script);
+})
+// .directive('card-js', function () {
+//     return {
+//         template: "<script src='../../bower_components/card-js/card-js.min.js'></script"
+//     }
+// });
 
 app.controller('sellController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     let game = setGetGame.getGame();

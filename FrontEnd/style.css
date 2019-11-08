@@ -530,3 +530,8 @@ a.user:hover {
   background-color: #000;
   color: #fff;
 }
+
+#paypal-button-container{
+  margin: 20px;
+  text-align: center;
+}

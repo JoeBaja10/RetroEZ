@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
 </head>
 
 <body ng-app="myApp">
@@ -28,7 +29,8 @@
                     <li><a href="#!/storefront">Storefront</a></li>
                 </ul>
                 <nav class="nav navbar-nav navbar-center">
-                    <form class="navbar-form" id='searchbar' role="search" ng-submit="searchGames(games)" autocomplete="off">
+                    <form class="navbar-form" id='searchbar' role="search" ng-submit="searchGames(games)"
+                        autocomplete="off">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term"
                                 ng-model='games'>
@@ -56,6 +58,7 @@
         </nav>
     </header>
 
+    <!-- <div class="card-js" data-capture-name="true"></div> -->
     <div ng-view></div>
     <script src="script.js"></script>
 </body>
