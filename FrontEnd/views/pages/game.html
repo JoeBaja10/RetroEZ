@@ -1,10 +1,10 @@
 <div class="titleGradient">
     <a href="#" ng-click="$event.preventDefault();sellGame(game.gameID,game.gameTitle,game.platforms,game.cover.url)">
-        <p class="gameRight sell">SELL GAME</p>
+        <p class="gameLeft gameRight sell">SELL GAME</p>
     </a>
     <div class="gameLeft">
         <img data-ng-src="{{ game.cover.url }}" class="imgLeft" />
-        <h1><strong>{{ game.gameTitle }}</strong></h1>
+        <h1 class="sElipsis"><strong>{{ game.gameTitle }}</strong></h1>
         <div>
             <p class="floatLeft gameRight2"><strong>Platform(s):</strong></p>
             <p ng-repeat='platform in game.platforms' class="platform"><strong>{{ platform.name }}</strong></p>
@@ -44,7 +44,7 @@
         </a>
         <p class="sf">{{ beingSold.platform }}</p>
         <p class="sf">${{ beingSold.price }}</p>
-        <p class="sf">Seller: <a class="user" href="#!/">{{ beingSold.sUser }}</a></p>
+        <p class="sf">Seller: <a class="user" href="#!/account/{{ beingSold.sUser }}">{{ beingSold.sUser }}</a></p>
     </div>
     <div id="storefront">
         <h3>No one is selling this game. Do you want to sell this game?</h3>

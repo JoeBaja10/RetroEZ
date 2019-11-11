@@ -29,6 +29,7 @@ const Sell = mongoose.model('Sell_Collection', sellSchema);
 
 router.get('/', (req, res) => {
     Sell.find((err, items) => {
+        console.log(items);
         if (err) return console.error(err);
         res.send(items);
     });
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
 router.get('/get/:id', (req, res) => {
     Sell.findById(req.params.id, (err, item) => {
         res.send(item);
-    })
+    });
 });
 
 router.get('/:gameID', (req, res) => {
@@ -77,8 +78,17 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/', (req, res) => {
-
+router.put('/:id', (req, res) => {
+    Sell.findById(req.params.id, (err, item) => {
+        let date = new Date();
+        if (err) return console.error(err);
+        item.buyingUser = req.body.bUser;
+        item.dateSold = date.getDate();
+        item.isBought = true;
+        item.save((err, item) => {
+            if (err) return console.error(err);
+        })
+    });
 });
 
 router.delete('/:id', (req, res) => {

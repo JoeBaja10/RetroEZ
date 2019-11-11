@@ -1,0 +1,26 @@
+<h1 class="center"><strong>{{ user }}'s STOREFRONT</strong></h1>
+<div class="ownStorefont center gameBottom4">
+    <a class="gameRight3">ORDER HISTORY</a>
+    <a>EDIT PASSWORD</a>
+</div>
+<div class="ownStorefont center gameBottom4">
+    <a>MESSAGE USER</a>
+</div>
+<div class="search-nav">
+    <nav class="nav navbar-nav navbar-center">
+        <input type="text" class="form-control" ng-model="search.title" placeholder="Search Storefront">
+    </nav>
+</div>
+<div class="gameLeft floatLeft">
+    <div class="storefront floatLeft gameRight3 gameBottom4 sfBorder center"
+        ng-repeat='beingSold in selling | filter: search | orderBy : "title"'>
+        <a class="sold" href="#!/gameSold/{{ beingSold.id }}"><img data-ng-src="{{ beingSold.coverURL }}" />
+            <p class="sf">{{ beingSold.title }}</p>
+        </a>
+        <p class="sf">{{ beingSold.platform }}</p>
+        <p class="sf">${{ beingSold.price }}</p>
+    </div>
+    <div id="storefront">
+        <h3>This user is not selling games.</h3>
+    </div>
+</div>

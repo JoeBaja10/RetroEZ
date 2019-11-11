@@ -437,6 +437,12 @@ p.gameRight.sell:hover {
   text-overflow: ellipsis;
 }
 
+.sElipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 a.sold {
   color: #000;
   text-decoration: none;
@@ -531,7 +537,22 @@ a.user:hover {
   color: #fff;
 }
 
+#purchbtn:hover {
+  background-color: #FFF;
+}
+
 #paypal-button-container{
   margin: 20px;
+  padding-top: 20px;
   text-align: center;
+  background-color: #FFF;
+  border: 2px solid #000;
+}
+
+.search-nav {
+  height: 75px;
+}
+
+.ownStorefront {
+  
 }
