@@ -556,3 +556,13 @@ a.user:hover {
 .ownStorefront {
   
 }
+
+.otherStorefront {
+
+}
+
+.search {
+  background-color: #FFF;
+  border: 2px solid #000;
+  margin-bottom: 5px;
+}
