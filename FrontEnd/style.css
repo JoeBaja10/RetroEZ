@@ -329,7 +329,7 @@ a.tableA:hover {
 }
 
 .gameTop {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 /* #gameBottom {
@@ -576,8 +576,8 @@ a.user:hover {
 .orders {
   background-color: #FFF;
   border: 2px solid #000;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 400px;
+  margin-right: 400px;
 }
 
 #noPurch {

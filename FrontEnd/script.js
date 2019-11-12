@@ -857,5 +857,12 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
 });
 
 app.controller('editController', function ($scope, $http, $log, setGetAccount, setGetPage, $window, $routeParams) {
+    document.getElementById('navbar').style.display = "none";
 
+    $scope.oldPassword = null;
+    $scope.newPassword = null;
+    $scope.confirmPassword = null;
+    $scope.changePassword = () => {
+        
+    }
 });
