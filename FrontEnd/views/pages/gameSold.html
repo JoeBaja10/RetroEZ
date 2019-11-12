@@ -2,15 +2,19 @@
     <h1 class="gameLeft center"><strong>{{ selling.title }}</strong></h1>
     <div class="gameLeft" id="gs2">
         <div class="gameBottom gs4">
-            <a href='#!/game/{{ selling.gameID }}'><img data-ng-src="{{ selling.coverURL }}" class="gameRight sellingIMG floatLeft center" /></a>
+            <a href='#!/game/{{ selling.gameID }}'><img data-ng-src="{{ selling.coverURL }}"
+                    class="gameRight sellingIMG floatLeft center" /></a>
             <div class="floatLeft gs3">
                 <p class="gselipsis">Platform: <strong>{{ selling.platform }}</strong></p>
                 <p>Price: <strong>${{ selling.price }}</strong></p>
-                <p>Seller: <a class="user" href="#!/"><strong>{{ selling.sUser }}</strong></a></p>
+                <p>Seller: <a class="user" href="#!/account/{{ selling.sUser }}"><strong>{{ selling.sUser }}</strong></a></p>
                 <p>Delivery By: <strong>{{ selling.dOption }}</strong></p>
                 <br />
                 <button class='btn' id='buybtn' ng-click="buyGame(selling.id)">BUY GAME</button>
                 <button class='btn' id="removebtn" ng-click="removeItem()">REMOVE ITEM</button>
+                <div id="noUserText">
+                    <p>You need to be logged in to be able to purchase this game.</p>
+                </div>
             </div>
         </div>
         <div class="floatLeft">

@@ -1,0 +1,13 @@
+<h1 class="center"><strong>ORDER HISTORY</strong></h1>
+<div class="orders center">
+    <div id="purchases" class="borderBottom" ng-repeat='order in bought'>
+        <a href='#!/game/{{ order.gameID }}'><img class="center gameTop histIMG" data-ng-src="{{ order.coverURL }}"
+                class="gameRight" /></a>
+        <p class="no-margin">{{ order.title }}</p>
+        <p class="no-margin">Price: {{ order.price }}</p>
+        <p>Date Sold: {{ order.dateSold }}</p>
+    </div>
+    <div id="noPurch">
+        <h2 class="hist-margin"><strong>YOU HAVE NO PURCHASED GAMES</strong></h2>
+    </div>
+</div>

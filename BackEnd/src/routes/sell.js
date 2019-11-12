@@ -21,6 +21,7 @@ const sellSchema = mongoose.Schema({
     desc: String,
     sellingUser: String,
     buyingUser: String,
+    dateSold: String,
     deliveryOption: String,
     isBought: Boolean,
 });
@@ -81,12 +82,15 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     Sell.findById(req.params.id, (err, item) => {
         let date = new Date();
+        let dateNow = date.getMonth() + '-' + date.getDate() + '-' + date.getFullYear();
         if (err) return console.error(err);
         item.buyingUser = req.body.bUser;
-        item.dateSold = date.getDate();
+        item.dateSold = dateNow;
         item.isBought = true;
         item.save((err, item) => {
             if (err) return console.error(err);
+            console.log(date)
+            console.log('Updated!')
         })
     });
 });

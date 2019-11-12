@@ -328,6 +328,14 @@ a.tableA:hover {
   padding-right: 10px;
 }
 
+.gameTop {
+  margin-top: 10px;
+}
+
+/* #gameBottom {
+  margin-bottom: 20px;
+} */
+
 .gameBottom {
   padding-bottom: 40px;
 }
@@ -468,13 +476,6 @@ a.user:hover {
   padding: 0px;
 }
 
-/* img {
-  -webkit-backface-visibility: hidden; 
-  -ms-transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-} */
-
 .center {
   text-align: center;
   align-content: center;
@@ -553,12 +554,12 @@ a.user:hover {
   height: 75px;
 }
 
-.ownStorefront {
-  
+#ownStorefront {
+  display: none;
 }
 
-.otherStorefront {
-
+#otherStorefront {
+  display: none;
 }
 
 .search {
@@ -566,3 +567,42 @@ a.user:hover {
   border: 2px solid #000;
   margin-bottom: 5px;
 }
+
+#noUserText {
+  display: none;
+  width: 320px;
+}
+
+.orders {
+  background-color: #FFF;
+  border: 2px solid #000;
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+#noPurch {
+  display: none;
+}
+
+.hist-margin {
+  margin: 20px;
+}
+
+.borderBottom {
+  border-bottom: 1px solid #000;
+}
+
+.histIMG {
+  border: 1px solid #000;
+}
+
+a.acct {
+  color: #FFF;
+  text-decoration: none;
+}
+
+a.acct:hover {
+  color: #ff0000;
+}
+
+

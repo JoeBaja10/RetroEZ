@@ -4,6 +4,7 @@ app.config(function ($routeProvider) {
         when('/', { templateUrl: 'views/pages/home.html', controller: 'homeController' }).
         when('/login', { templateUrl: 'views/pages/login.html', controller: 'loginController' }).
         when('/signup', { templateUrl: 'views/pages/signup.html', controller: 'signupController' }).
+        when('/editPassword/:username', { templateUrl: 'views/pages/edit.html', controller: 'editController' }).
         when('/account/:username', { templateUrl: 'views/pages/account.html', controller: 'accountController' }).
         when('/search/:games', { templateUrl: 'views/pages/search.html', controller: 'searchController' }).
         when('/game/:id', { templateUrl: 'views/pages/game.html', controller: 'gameController' }).
@@ -15,6 +16,7 @@ app.config(function ($routeProvider) {
         when('/gameSold/:id', { templateUrl: 'views/pages/gameSold.html', controller: 'soldController' }).
         when('/sellGame', { templateUrl: 'views/pages/sell.html', controller: 'sellController' }).
         when('/buy/:id', { templateUrl: 'views/pages/purchase.html', controller: 'buyController' }).
+        when('/orders', { templateUrl: 'views/pages/history.html', controller: 'historyController' }).
         otherwise({ redirectTo: '/' });
 });
 
@@ -65,7 +67,7 @@ app.service('setGetPage', function () {
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount, setGetPage) {
     setGetPage.setPage('#!/');
-    
+
     $scope.$emit('lisuEvent');
 });
 
@@ -143,16 +145,31 @@ app.controller('accountController', function ($scope, $http, $log, $window, $rou
 
     $scope.user = username;
 
+    let acct = setGetAccount.getAccount();
+    console.log(acct)
+    let uname = acct.data;
+
+    if ((acct.data == "" || acct == undefined) && (uname == "" || uname == undefined)) {
+        document.getElementById('otherStorefront').style.display = 'none';
+    }
+    else if (username == acct) {
+        document.getElementById('ownStorefront').style.display = 'inline-block';
+        console.log('test');
+    }
+    else if (username != acct) {
+        document.getElementById('otherStorefront').style.display = 'inline-block';
+        console.log('test');
+    }
+
     $http.get('http://localhost:3000/sell/')
         .then(function (response) {
             $scope.selling = new Array;
             if (typeof response.data[0] == 'undefined') {
                 document.getElementById('storefront').style.display = 'inline-block';
-                // document.getElementsByClassName('storefront')[0].style.display = 'none';
             }
             else {
                 for (let i = 0; i < response.data.length; i++) {
-                    if ((typeof response.data[i].coverURL != 'undefined' || typeof response.data[i].platform != 'undefined') && response.data[i].isBought == false && response.data[i].sellingUser == username) {
+                    if (response.data[i].isBought == false && response.data[i].sellingUser == username) {
                         $scope.selling.push({
                             id: response.data[i]._id,
                             coverURL: response.data[i].coverURL,
@@ -183,7 +200,7 @@ app.controller('searchController', function ($scope, $http, $log, $window, $rout
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].category == 0) {
                     if (typeof response.data[i].platforms != 'undefined') {
-                        if (response.data[i].platforms[0].name != 'Android' && response.data[i].platforms[0].name != 'iOS' && response.data[i].platforms[0].name != 'Mobile' && response.data[i].platforms[0].name != 'Web browser' && response.data[i].platforms[0].name != 'Arcade') {
+                        if (response.data[i].platforms[0].name != 'Android' && response.data[i].platforms[0].name != 'iOS' && response.data[i].platforms[0].name != 'Mobile' && response.data[i].platforms[0].name != 'Web browser' && response.data[i].platforms[0].name != 'Arcade' && response.data[i].platforms[0].name != 'WiiWare') {
                             console.log(response.data[i]);
                             $scope.games.push({
                                 gameID: response.data[i].id,
@@ -309,7 +326,7 @@ app.controller('storefrontController', function ($scope, $route, $http, $window,
             }
             else {
                 for (let i = 0; i < response.data.length; i++) {
-                    if ((typeof response.data[i].coverURL != 'undefined' || typeof response.data[i].platform != 'undefined') && response.data[i].isBought == false) {
+                    if (response.data[i].isBought == false) {
                         $scope.selling.push({
                             id: response.data[i]._id,
                             coverURL: response.data[i].coverURL,
@@ -320,29 +337,25 @@ app.controller('storefrontController', function ($scope, $route, $http, $window,
                         });
                         console.log(response.data[i]);
                     }
-                    else {
-                        $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
-                        if (typeof response.data[0] == 'undefined') {
-                            document.getElementById('storefront').style.display = 'inline-block';
-                        }
-                    }
+                    // else {
+                    //     $http.delete('http://localhost:3000/sell/' + response.data[i]._id);
+                    //     if (typeof response.data[0] == 'undefined') {
+                    //         document.getElementById('storefront').style.display = 'inline-block';
+                    //     }
+                    // }
                 }
             }
         })
 });
 
-app.controller('soldController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {    
-    let getPage = setGetPage.getPage();
-
+app.controller('soldController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     setGetPage.setPage('#!/storefront')
-    
+
     $scope.$emit('lisuEvent');
-    
-    if (getPage.data == "" || getPage == undefined) {
-        setGetPage.setPage('#!/');
-    }
 
     let id = $routeParams.id
+
+    setGetPage.setPage('#!/gameSold/' + id)
 
     $http.get('http://localhost:3000/sell/get/' + id)
         .then(function (response) {
@@ -364,10 +377,17 @@ app.controller('soldController', function ($scope, $http, $log, $window, $routeP
             }
 
             let acct = setGetAccount.getAccount();
+            let username = acct.data;
 
             if (response.data.sellingUser == acct) {
                 document.getElementById('buybtn').style.display = 'none';
                 document.getElementById('removebtn').style.display = 'inline-block';
+                document.getElementById('noUserText').style.display = 'none';
+            }
+            else if ((acct.data == "" || acct == "" || acct == undefined) && (username == "" || username == undefined)) {
+                document.getElementById('buybtn').style.display = 'none';
+                document.getElementById('removebtn').style.display = 'none';
+                document.getElementById('noUserText').style.display = 'inline-block';
             }
         })
 
@@ -382,36 +402,36 @@ app.controller('soldController', function ($scope, $http, $log, $window, $routeP
         let page = setGetPage.getPage();
 
         $http.delete('http://localhost:3000/sell/' + id);
-        $window.location.href = page;
+        $window.location.href = '#!/storefront';
     }
 });
 
 app.controller('buyController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     let getPage = setGetPage.getPage();
-    
+
     setGetPage.setPage('#!/storefront')
-    
+
     $scope.$emit('lisuEvent');
-    
+
     if (getPage.data == "" || getPage == undefined) {
         setGetPage.setPage('#!/');
     }
-    
+
     $scope.$emit('lisuEvent');
 
     let id = $routeParams.id;
     let price;
 
     $http.get('http://localhost:3000/sell/get/' + id)
-    .then(function (response) {
-        $scope.selling = {
-            id: response.data._id,
-            title: response.data.title,
-            price: response.data.price,
-        };
+        .then(function (response) {
+            $scope.selling = {
+                id: response.data._id,
+                title: response.data.title,
+                price: response.data.price,
+            };
 
-        price = $scope.selling.price
-    });
+            price = $scope.selling.price
+        });
 
 
     $scope.gameBought = (id) => {
@@ -445,7 +465,7 @@ app.controller('buyController', function ($scope, $http, $log, $window, $routePa
 
 app.controller('sellController', function ($scope, $http, $log, $window, $routeParams, setGetGame, setGetAccount, setGetPage) {
     let getPage = setGetPage.getPage();
-        
+
     setGetPage.setPage('#!/storefront')
 
     $scope.$emit('lisuEvent');
@@ -521,6 +541,43 @@ app.controller('sellController', function ($scope, $http, $log, $window, $routeP
             };
         };
     }
+});
+
+app.controller('historyController', function ($scope, $http, $rootScope, $window, $route, setGetAccount, setGetPage) {
+    $scope.$emit('lisuEvent');
+
+    let acct = setGetAccount.getAccount();
+    let username = acct.data;
+    if ((acct.data == "" || acct == undefined) && (username == "" || username == undefined)) {
+        $window.location.href = '#!/'
+    }
+
+    $http.get('http://localhost:3000/sell/')
+        .then(function (response) {
+            $scope.bought = new Array;
+            let hasBought = false;
+            for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].isBought == true && response.data[i].buyingUser == acct) {
+                    hasBought = true;
+                    $scope.bought.push({
+                        id: response.data[i]._id,
+                        gameID: response.data[i].gameID,
+                        coverURL: response.data[i].coverURL,
+                        title: response.data[i].title,
+                        price: response.data[i].price,
+                        dateSold: response.data[i].dateSold,
+                    });
+                }
+            }
+            if (hasBought == false) {
+                document.getElementById('noPurch').style.display = 'inline-block'
+            }
+            console.log(response);
+        });
+
+    let date = new Date();
+
+    console.log(date);
 });
 
 app.controller('messagesController', function ($scope, $http, $log, $location, $window, $route, setGetAccount) {
@@ -797,4 +854,8 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
                 });
         }
     }
+});
+
+app.controller('editController', function ($scope, $http, $log, setGetAccount, setGetPage, $window, $routeParams) {
+
 });

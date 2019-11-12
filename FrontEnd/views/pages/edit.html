@@ -1,0 +1,24 @@
+<div class="homeNav">
+    <a class="navbar-brand home" href="#!/">RetroEZ</a>
+</div>
+<div class="bodyClass">
+    <div id="error"></div>
+    <div class="input-group lisu">
+        <form ng-submit='changePassword()' autocomplete="off">
+            <h2>EDIT PASSWORD</h2>
+            <div>
+                <strong>Old Password:</strong> <input type="text" class="form-control" ng-model="oldPassword"
+                    name="password" id="oldInput">
+            </div>
+            <div>
+                <strong>New Password:</strong> <input type="password" class="form-control" ng-model="newPassword"
+                    name="password" id="newInput">
+            </div>
+            <div class="gameBottom">
+                <strong>Confirm New Password:</strong> <input type="password" class="form-control"
+                    ng-model="confirmPassword" name="password" id="confInput">
+            </div>
+            <button class='btn' id='accntbtn' type="submit">LOG IN</button>
+        </form>
+    </div>
+</div>

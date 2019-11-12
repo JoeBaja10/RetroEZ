@@ -1,10 +1,12 @@
 <h1 class="center"><strong>{{ user }}'s STOREFRONT</strong></h1>
-<div class="ownStorefont center gameBottom4">
-    <a class="gameRight3">ORDER HISTORY</a>
-    <a>EDIT PASSWORD</a>
-</div>
-<div class="ownStorefont center gameBottom4">
-    <a>MESSAGE USER</a>
+<div class="center gameBottom4">
+    <div id='ownStorefront'>
+        <a class="gameRight3 acct" href="#!/orders">ORDER HISTORY</a>
+        <a class="acct" href='#!/editPassword/{{ user }}'>EDIT PASSWORD</a>
+    </div>
+    <div id='otherStorefront'>
+        <a class="acct">MESSAGE USER</a>
+    </div>
 </div>
 <div class="search-nav">
     <nav class="nav navbar-nav navbar-center">
