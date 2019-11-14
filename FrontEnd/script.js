@@ -437,6 +437,7 @@ app.controller('buyController', function ($scope, $http, $log, $window, $routePa
     $scope.gameBought = (id) => {
         let bUser = setGetAccount.getAccount();
         $http.put('http://localhost:3000/sell/' + id, { 'bUser': bUser })
+        alert('You have completed your purchase!')
         $window.location.href = '#!/';
     }
 
@@ -859,10 +860,100 @@ app.controller('signupController', function ($scope, $http, $log, setGetAccount,
 app.controller('editController', function ($scope, $http, $log, setGetAccount, setGetPage, $window, $routeParams) {
     document.getElementById('navbar').style.display = "none";
 
+    let username = $routeParams.username;
+
     $scope.oldPassword = null;
     $scope.newPassword = null;
     $scope.confirmPassword = null;
     $scope.changePassword = () => {
-        
+        $log.info($scope.oldPassword);
+        $log.info($scope.newPassword);
+        $log.info($scope.confirmPassword);
+        document.getElementById('oldInput').style.border = '2px solid #000';
+        document.getElementById('newInput').style.border = '2px solid #000';
+        document.getElementById('confInput').style.border = '2px solid #000';
+        document.getElementById('error').innerHTML = "";
+
+        let oPass = $scope.oldPassword;
+        let nPass = $scope.newPassword;
+        let cPass = $scope.confirmPassword;
+
+        let opTrim;
+        let npTrim;
+        let cpTrim;
+
+        if (oPass != null) {
+            opTrim = oPass.trim();
+        }
+
+        if (nPass != null) {
+            npTrim = nPass.trim();
+        }
+
+        if (cPass != null) {
+            cpTrim = cPass.trim();
+        }
+
+        if ((oPass == null && nPass != null && cPass != null) || (opTrim == "" && npTrim != "" && cpTrim != "")) {
+            document.getElementById("error").innerHTML = "Please enter in your old passowrd.";
+            document.getElementById('oldInput').style.border = '2px solid #FF0000';
+        }
+        else if ((nPass == null && oPass != null && cPass != null) || (npTrim == "" && opTrim != "" && cpTrim != "")) {
+            document.getElementById("error").innerHTML = "Please enter in your new passowrd.";
+            document.getElementById('newInput').style.border = '2px solid #FF0000';
+        }
+        else if ((cPass == null && oPass != null && nPass != null) || (cpTrim == "" && opTrim != "" && npTrim != "")) {
+            document.getElementById("error").innerHTML = "Please confirm your new passowrd.";
+            document.getElementById('confInput').style.border = '2px solid #FF0000';
+        }
+        else if ((oPass == null && nPass == null && cPass != null) || (opTrim == "" && npTrim == "" && cpTrim != "")) {
+            document.getElementById("error").innerHTML = "Please enter in your old and new passowrd.";
+            document.getElementById('oldInput').style.border = '2px solid #FF0000';
+            document.getElementById('newInput').style.border = '2px solid #FF0000';
+        }
+        else if ((oPass == null && nPass != null && cPass == null) || (opTrim == "" && npTrim != "" && cpTrim == "")) {
+            document.getElementById("error").innerHTML = "Please enter in your old and confirm your new passowrd.";
+            document.getElementById('oldInput').style.border = '2px solid #FF0000';
+            document.getElementById('confInput').style.border = '2px solid #FF0000';
+        }
+        else if ((oPass != null && nPass == null && cPass == null) || (opTrim != "" && npTrim == "" && cpTrim == "")) {
+            document.getElementById("error").innerHTML = "Please enter in new passowrd and confirm it.";
+            document.getElementById('newInput').style.border = '2px solid #FF0000';
+            document.getElementById('confInput').style.border = '2px solid #FF0000';
+        }
+        else if ((oPass == null && nPass == null && cPass == null) || (opTrim == "" && npTrim == "" && cpTrim == "")) {
+            document.getElementById("error").innerHTML = "Please enter in your old and new passowrd and confirm your new password.";
+            document.getElementById('oldInput').style.border = '2px solid #FF0000';
+            document.getElementById('newInput').style.border = '2px solid #FF0000';
+            document.getElementById('confInput').style.border = '2px solid #FF0000';
+        }
+        else {
+            $http.get('http://localhost:3000/user/' + username + '/' + oPass)
+                .then(function (response) {
+                    if (response.data != "" && nPass.length > 5) {
+                        let id = response.data._id;
+                        console.log(nPass);
+                        $http.put('http://localhost:3000/user/' + id, { 'newPassword': nPass });
+                        alert('Your password has been changed');
+                        $window.location.href = '#!/account/' + username; 
+                    }
+                    else if (nPass.length < 6 && (npTrim != null && npTrim != "") && response.data == "") {
+                        document.getElementById("error").innerHTML = "Your old password is wrong. Please, enter it again. Your new password must be more than 5 charcters.";
+                        document.getElementById('oldInput').style.border = '2px solid #FF0000';
+                        document.getElementById('newInput').style.border = '2px solid #FF0000';
+                        document.getElementById('confInput').style.border = '2px solid #FF0000';
+                    }
+                    else if (nPass.length < 6 && (npTrim != null && npTrim != "")) {
+                        document.getElementById("error").innerHTML = "Your new password must be more than 5 charcters.";
+                        document.getElementById('newInput').style.border = '2px solid #FF0000';
+                        document.getElementById('confInput').style.border = '2px solid #FF0000';
+                    }
+                    else {
+                        document.getElementById("error").innerHTML = "Your old password is wrong. Please, enter it again.";
+                        document.getElementById('oldInput').style.border = '2px solid #FF0000';
+                    }
+                });
+        }
+
     }
 });

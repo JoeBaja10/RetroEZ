@@ -118,4 +118,19 @@ router.post('/', (req, res) => {
     res.send(user);
 });
 
+router.put('/:id', (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.hash(req.body.newPassword, salt, function (err, hash) {
+                user.password = hash;
+
+                user.save((err, user) => {
+                    if (err) return console.error(err);
+                    console.log(req.body.newPassword + ' stored');
+                });
+            });
+        });
+    });
+});
+
 module.exports = router;
