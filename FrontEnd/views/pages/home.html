@@ -1,0 +1,17 @@
+<div class="titleGradient">
+    <h2 class="gameLeft"><strong>FEATURED GAME OF THE MONTH: <a class="hsTitle gameLeft"
+                href='#!/game/{{ featured.id }}'><img class='gameRight'
+                    data-ng-src="{{ featured.cover.url }}" />{{ featured.title }}</a></strong></h2>
+</div>
+<div class='b-black bg-white cntr-div'>
+    <div class="gameLeft sshots2 gameTop overflow">
+        <div class="screenshots gameBottom2" ng-repeat='screenshot in featured.screenshots'>
+            <img class="b-black" data-ng-src="{{ screenshot.url }}" />
+        </div>
+    </div>
+    <div class="gameLeft">
+        <div class="summary gameRight">
+            <p>Summary: {{ featured.summary }}</p>
+        </div>
+    </div>
+</div>

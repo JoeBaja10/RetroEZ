@@ -16,11 +16,12 @@
 </head>
 
 <body ng-app="myApp">
+    <div></div>
     <header ng-controller="navbarController">
         <nav class="navbar navbar-inverse" id="navbar">
             <div class="container-fluid">
-                <div class="navbar-header">
-                    <li><a class="navbar-brand" href="#!/">RetroEZ</a></li>
+                <div class="navbar-header logoDiv">
+                    <li><a class="navbar-brand" href="#!/"><img class="logoIMG" data-ng-src='./img/retroezlogo.png' /></a></li>
                 </div>
                 <!-- <ul class="nav navbar-nav">
                     <li><a href="#!/">Home</a></li>
@@ -57,9 +58,11 @@
                 </div>
         </nav>
     </header>
-
     <!-- <div class="card-js" data-capture-name="true"></div> -->
     <div ng-view></div>
+
+    <!-- <footer class="gameTop gameBottom f-20 bg-white b-top-black"><p class="center">&#9400;2019 Joseph Baja</p></footer> -->
+
     <script src="script.js"></script>
 </body>
 

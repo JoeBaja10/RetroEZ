@@ -298,6 +298,7 @@ textarea#messgaeBox2:focus {
 
 .center {
   text-align: center;
+  align-content: center;
 }
 
 #messageTD {
@@ -332,10 +333,6 @@ a.tableA:hover {
   margin-top: 15px;
 }
 
-/* #gameBottom {
-  margin-bottom: 20px;
-} */
-
 .gameBottom {
   padding-bottom: 40px;
 }
@@ -356,9 +353,9 @@ a.tableA:hover {
   padding-left: 20px;
 }
 
-/* .gameLeft2 {
-  padding-left: 13px;
-} */
+.gameLeft2 {
+  margin-left: 20px;
+}
 
 .gameRight {
   padding-right: 20px;
@@ -397,7 +394,7 @@ a.searchLink:hover {
 .screenshots img {
   height: 200px;
   width: 200px;
-  padding-right: 10px;
+  margin-right: 10px;
 }
 
 .floatLeft {
@@ -525,8 +522,13 @@ a.user:hover {
   height: 100px;
 }
 
+.sshots2 {
+  margin-bottom: 10px;
+  width: auto;
+}
+
 .sum {
-  width: 1520px;
+  width: 1490px;
 }
 
 #removebtn {
@@ -605,4 +607,58 @@ a.acct:hover {
   color: #ff0000;
 }
 
+.bg-white {
+  background-color: #FFF;
+}
 
+.b-black {
+  border: 2px solid #000;
+}
+ 
+.cntr-div {
+  margin: auto;
+  width: 75%;
+  text-align: center;
+  align-content: center;
+  overflow: auto;
+}
+
+.overflow {
+  overflow: auto;
+}
+
+.f-20 {
+  font-size: 20px;
+}
+
+.hsTitle {
+  color: #000;
+}
+
+.hsTitle:hover {
+  color: #fe0016;
+  text-decoration: none;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;  
+}
+
+.b-top-black {
+  border-top: 2px solid #000;
+}
+
+.sumBorder {
+  border: 2px solid #000;
+  background-color: #FFF;
+  margin-left: 20px; 
+}
+
+.logoIMG {
+  height: 40px;
+  position: relative;
+  top: -10px;
+}

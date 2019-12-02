@@ -35,6 +35,21 @@ app.service('setGetAccount', function () {
     };
 });
 
+app.service('setGetUserToMsg', function () {
+    var objectValue = {
+        data: ""
+    };
+
+    return {
+        getUserToMsg: function () {
+            return objectValue;
+        },
+        setUserToMsg: function (value) {
+            objectValue = value;
+        },
+    };
+});
+
 app.service('setGetGame', function () {
     var objValue = {
         data: ""
@@ -67,6 +82,20 @@ app.service('setGetPage', function () {
 
 app.controller('homeController', function ($scope, $route, $http, setGetAccount, setGetPage) {
     setGetPage.setPage('#!/');
+
+    let gameID = 37382;
+
+    $http.get('http://localhost:3000/gameAPI/game/' + gameID)
+        .then(function(response) {
+            console.log(response);
+            $scope.featured = {
+                id: gameID,
+                title: response.data[0].name,
+                cover: response.data[0].cover,
+                screenshots: response.data[0].screenshots,
+                summary: response.data[0].summary
+            }
+        });
 
     $scope.$emit('lisuEvent');
 });
@@ -136,7 +165,7 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $route
     }
 });
 
-app.controller('accountController', function ($scope, $http, $log, $window, $routeParams, setGetPage, setGetAccount) {
+app.controller('accountController', function ($scope, $http, $log, $window, $routeParams, setGetPage, setGetAccount, setGetUserToMsg) {
     let username = $routeParams.username
 
     setGetPage.setPage('#!/account/' + username);
@@ -183,6 +212,12 @@ app.controller('accountController', function ($scope, $http, $log, $window, $rou
                 }
             }
         })
+
+    $scope.messageUser = () => {
+        setGetUserToMsg.setUserToMsg(username);
+        console.log(setGetUserToMsg.getUserToMsg());
+        $window.location.href = '#!/messages/new'
+    };
 });
 
 app.controller('searchController', function ($scope, $http, $log, $window, $routeParams, setGetPage) {
@@ -581,7 +616,7 @@ app.controller('historyController', function ($scope, $http, $rootScope, $window
     console.log(date);
 });
 
-app.controller('messagesController', function ($scope, $http, $log, $location, $window, $route, setGetAccount) {
+app.controller('messagesController', function ($scope, $http, $log, $location, $window, $route, setGetAccount, setGetUserToMsg) {
     $scope.$emit('lisuEvent');
     document.getElementById('userInput').style.border = '2px solid #000';
     document.getElementById('messageBox').style.border = '2px solid #000';
@@ -623,6 +658,13 @@ app.controller('messagesController', function ($scope, $http, $log, $location, $
     }
     else if ($location.path() == '/messages/new') {
         document.getElementById('new').style.display = 'block';
+
+        let userToMsg = setGetUserToMsg.getUserToMsg();
+
+        if(userToMsg != undefined && userToMsg.data != "") {
+            document.getElementById('userInput').value = userToMsg;
+            document.getElementById('userInput').placeholder = userToMsg;
+        }
     }
     else if ($location.path() == '/messages/sent') {
         document.getElementById('new').style.display = 'none';
