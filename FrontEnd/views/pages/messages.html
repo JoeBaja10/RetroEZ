@@ -25,7 +25,18 @@
       <div class="row">
         <div class="col-lg-12">
           <div id='messages'>
-            <table id='messageTable'>
+            <div id='indexSent' ng-repeat='message in messages'>
+              <div>
+                <p class="topRow gameRight f-24">Username: <a class="msgA"
+                    href='#!/account/{{ message.user }}'>{{ message.user }}</a></p>
+                <a class="topRow msgA f-24" href="#" ng-click="$event.preventDefault();deleteMessage(message.id)"><span
+                    class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+              </div>
+              <div>
+                <p class="bRow f-24">{{ message.msg }}</p>
+              </div>
+            </div>
+            <!-- <table id='messageTable'>
               <tr ng-repeat="message in messages">
                 <td id="messageTD">Username: <a class="tableA" href='#!/account/{{ message.user }}'>{{ message.user }}</a></td>
                 <td id="messageTD">{{ message.msg }}</td>
@@ -34,7 +45,7 @@
                         class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
                 </div>
               </tr>
-            </table>
+            </table> -->
           </div>
           <div id="new">
             <div id="error"></div>
@@ -50,9 +61,6 @@
               <div class="textwrapper"><textarea id="messageBox" cols="2" rows="10" ng-model="message"
                   placeholder="Type in Message"></textarea></div>
             </form>
-          </div>
-          <div id="message" class="center">
-
           </div>
         </div>
       </div>

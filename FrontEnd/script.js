@@ -166,7 +166,7 @@ app.controller('navbarController', function ($scope, $rootScope, $window, $route
 });
 
 app.controller('accountController', function ($scope, $http, $log, $window, $routeParams, setGetPage, setGetAccount, setGetUserToMsg) {
-    let username = $routeParams.username
+    let username = $routeParams.username;
 
     setGetPage.setPage('#!/account/' + username);
 
@@ -179,14 +179,12 @@ app.controller('accountController', function ($scope, $http, $log, $window, $rou
     let uname = acct.data;
 
     if ((acct.data == "" || acct == undefined) && (uname == "" || uname == undefined)) {
-        document.getElementById('otherStorefront').style.display = 'none';
     }
     else if (username == acct) {
         document.getElementById('ownStorefront').style.display = 'inline-block';
         console.log('test');
     }
     else if (username != acct) {
-        document.getElementById('otherStorefront').style.display = 'inline-block';
         console.log('test');
     }
 

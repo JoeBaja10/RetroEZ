@@ -282,6 +282,11 @@ textarea#messgaeBox2:focus {
   float: left;
 }
 
+.bRow {
+  clear: left;
+  border-bottom: 2px solid #000;
+}
+
 #new {
   display: none;
 }
@@ -290,11 +295,11 @@ textarea#messgaeBox2:focus {
   display: none;
 }
 
-#message {
+/* #message {
   display: none;
   font-weight: bold;
   font-size: 20px;
-}
+} */
 
 .center {
   text-align: center;
@@ -315,12 +320,12 @@ textarea#messgaeBox2:focus {
   /* display: none; */
 }
 
-a.tableA {
+a.msgA {
   color: #000;
   text-decoration: none;
 }
 
-a.tableA:hover {
+a.msgA:hover {
   color: #fe0016;
 }
 
@@ -661,4 +666,8 @@ footer {
   height: 40px;
   position: relative;
   top: -10px;
+}
+
+.f-24 {
+  font-size: 24px;
 }
